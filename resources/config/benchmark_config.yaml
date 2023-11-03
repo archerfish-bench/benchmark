@@ -1,0 +1,26 @@
+implementations:
+  # Each benchmark can have its relevant configurations defined here.
+  - name: WaiiBenchmark
+    class: waii_benchmark.WaiiBenchmark
+    description: Using Waii API for generating text-to-sql using openai GPT-4.
+    threads_count: 3
+    waii_configs:
+      url: 'http://localhost:9859/api/'
+      api_key: ''
+      waii_db_connection_key: 'snowflake://<username>@<account>/<database>?role=<ROLE>&warehouse=<COMPUTE>'
+      waii_context: perf_spider_waii_context.json
+    databases:
+      source:
+        # Golden query runs in source DB
+        type: sqlalchemy
+        connection: 'snowflake://<username>:<password>@<account>/<database>?role=<ROLE>&warehouse=<compute>'
+      target:
+        # Generated query runs in target DB
+        # When target DB is same as source, we can use the same connection. Otherwise, provide type and connection string
+        same_as_source: true
+
+  # LLAMA index benchmark. Generates SQL queries in spider, using LLAMA index libraries.
+  - name: LlamaIndexBenchmark
+    class: llama_index_benchmark.LlamaIndexBenchmark
+    description: Llama index sample benchmark implementation using their LLM.
+    db_connection: 'sqlite:///<provide_entire_path_here>/world_1.sqlite'

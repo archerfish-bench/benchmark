@@ -1,0 +1,145 @@
+[
+  {
+    "id": "80d2bbf5-00f0-4357-9eda-880abcc6e27b",
+    "statement": "When ordering the result set, unless otherwise specified, move the null values last.",
+    "labels": null,
+    "scope": "*",
+    "always_include": true
+  },
+  {
+    "id": "6946f6cb-9e53-43f7-9af6-072174f2a8da",
+    "statement": "Don't use *, be specific with the columns to use.",
+    "labels": null,
+    "scope": "*",
+    "always_include": true
+  },
+  {
+    "id": "a0c4ddf8-fee7-4762-bc98-194f4c6d1231",
+    "statement": "Format of the date in birth date is: 'MON DD, YYYY'",
+    "labels": null,
+    "scope": "SPIDER_DEV.POKER_PLAYER.PEOPLE.BIRTH_DATE",
+    "always_include": true
+  },
+  {
+    "id": "bc5db36c-4142-4bd5-a2d9-9170beef6113",
+    "statement": "The format of the text column varies. It's either 'DD MON YYYY', or 'MON YYYY', or 'YYYY'. Use regex to parse.",
+    "labels": null,
+    "scope": "SPIDER_DEV.BATTLE_DEATH.BATTLE.DATE",
+    "always_include": true
+  },
+  {
+    "id": "a00f1363-e9e4-4d97-9779-c37e4ff6dabd",
+    "statement": "The airline field in the flights table is an ID and corresponds to the UID number in the airline table.",
+    "labels": null,
+    "scope": "SPIDER_DEV.FLIGHT_2.AIRLINES",
+    "always_include": true
+  },
+  {
+    "id": "c13af930-29f9-4c12-86f3-907fbcdeef15",
+    "statement": "use try_to_number when text to number/float conversion had to be done",
+    "scope": "SPIDER_DEV",
+    "labels": null
+  },
+  {
+    "id": "c67cb4e7-874f-47bc-8fb4-dfe6a526b649",
+    "statement": "series_name column in TV_CHANNEL has details on series name of TV",
+    "scope": "SPIDER_DEV.TVSHOW",
+    "labels": null
+  },
+  {
+    "id": "0887cd8a-a2cb-4a7d-868e-59f16a66cbab",
+    "statement": "percentage column in countrylanguage table represents percentage of people speaking that language",
+    "scope": "SPIDER_DEV.WORLD_1",
+    "labels": null
+  },
+  {
+    "id": "042ca334-b6af-4eb4-9fe5-0f36ebb9b418",
+    "statement": "content column has details about series in tv_channel table",
+    "scope": "SPIDER_DEV.TVSHOW",
+    "labels": null
+  },
+  {
+    "id": "24aace1d-9f58-4f15-9380-c1488daa088f",
+    "statement": "loser_rank has rank of losers in matches table",
+    "scope": "SPIDER_DEV.WTA_1",
+    "labels": null
+  },
+  {
+    "id": "3052cc5a-fa87-447c-bf43-9ba6efef1ed2",
+    "statement": "winner_rank_points has details on winner rank points. loser_rank_points has details on loser rank points",
+    "scope": "SPIDER_DEV.WTA_1",
+    "labels": null
+  },
+  {
+    "id": "f06fdcaf-6122-42bb-9665-59c41326e51a",
+    "statement": "TOURNEY_NAME contains name of the tournament",
+    "scope": "SPIDER_DEV.WTA_1",
+    "labels": null
+  },
+  {
+    "id": "2d206a29-9d40-42ac-9e47-7908b4bb7947",
+    "statement": "Friend is a bridging table and may or may not contain all records of highschooler",
+    "scope": "SPIDER_DEV.NETWORK_1",
+    "labels": null
+  },
+  {
+    "id": "d5a6a292-616c-4d1d-a152-d736d05e936f",
+    "statement": "SONG_NAME represents song name SINGER",
+    "scope": "SPIDER_DEV.CONCERT_SINGER.SINGER",
+    "labels": null
+  },
+  {
+    "id": "d128ff1e-ceea-46b2-b77f-08ef3c1525c4",
+    "statement": "name should be with exact comparison. Do not use LIKE , ILIKE",
+    "scope": "SPIDER_DEV.museum_visit.museum",
+    "labels": null
+  },
+  {
+    "id": "6b141ea1-b26b-4054-8128-ca86fc246c94",
+    "statement": "date_left can be used to determine course completion date",
+    "scope": "SPIDER_DEV.student_transcripts_tracking.Students",
+    "labels": null
+  },
+  {
+    "id": "28a6717e-f0ee-42ee-908a-d9acf332dd04",
+    "statement": "Use exact comparisons for language, continent, GovernmentForm. Do not use LIKE or ILIKE",
+    "scope": "SPIDER_DEV.world_1",
+    "labels": null
+  },
+  {
+    "id": "7abfd91a-46fe-41c9-98b1-8b2a2f4e0be6",
+    "statement": "winner_name represents winner name. loser_name represents loser name.",
+    "scope": "SPIDER_DEV.WTA_1.matches",
+    "labels": null
+  },
+  {
+    "id": "f7d20c7e-cb9b-41aa-8603-20a402bc5417",
+    "statement": "name of the winner is stored in winner_name",
+    "scope": "SPIDER_DEV.WTA_1",
+    "labels": null
+  },
+  {
+    "id": "5b2fbbc7-7f31-49d1-97fa-e83bf8251037",
+    "statement": "country can have many language. It is 1 to many relationship between country and countrylanguage",
+    "scope": "SPIDER_DEV.world_1",
+    "labels": []
+  },
+  {
+    "id": "67f60ac8-539b-4c83-92f5-e393828b7130",
+    "statement": "COUNTRY in car_makers is a foreign key of COUNTRYID in countries",
+    "scope": "SPIDER_DEV.car_1",
+    "labels": []
+  },
+  {
+    "id": "494b2771-8a8f-4e0e-ad7f-81f038ce5c2d",
+    "statement": "makeid in car_names is the foreign key of maker in model_list",
+    "scope": "SPIDER_DEV.car_1",
+    "labels": []
+  },
+  {
+    "id": "594b2771-8a8f-4e0e-ad7f-81f038ce5c2d",
+    "statement": "makeid in car_names is the foreign key of maker in model_list",
+    "scope": "SPIDER_DEV.car_1",
+    "labels": []
+  }
+]

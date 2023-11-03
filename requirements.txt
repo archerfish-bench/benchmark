@@ -1,0 +1,16 @@
+waii-sdk-py==1.7.5
+pyyaml
+tqdm
+uuid
+sqlalchemy
+cx_Oracle
+pyodbc
+snowflake-sqlalchemy
+snowflake-connector-python==3.1.1
+pyarrow==10.0.1
+jinja2
+ruamel.yaml
+llama_index
+openai
+overrides
+psycopg2

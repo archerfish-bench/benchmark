@@ -1,0 +1,16 @@
+# Constants
+WAII_DB_CONNECTION_KEY = "waii_db_connection_key"
+DATABASES = "databases"
+SAME_AS_SOURCE = "same_as_source"
+TARGET = "target"
+SOURCE = "source"
+CONNECTION = "connection"
+TYPE = "type"
+WAII_CONTEXT = "waii_context"
+TWEAKS = "tweaks"
+AUTO_SELECT_SCHEMA = "auto_select_schema"
+QUERY_NAME = "query_name"
+QUESTION = "question"
+GOLDEN_QUERY = "golden_query"
+THREADS_COUNT = "threads_count"
+TABLES = 'tables'

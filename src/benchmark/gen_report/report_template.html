@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Task Results Report</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
+    <style>
+        body {
+            font-family: 'Verdana', sans-serif;
+        }
+
+        #taskResultsTable,
+        #taskResultsTable th,
+        #taskResultsTable td {
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Style for alternate rows */
+        #taskResultsTable tbody tr:nth-child(even) {
+            background-color: #f7fafc; /* A mild and pleasant color for alternate rows */
+        }
+
+        /* Style for rows with False in is_results_comparison_fine */
+        .row-highlight {
+            color: red;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            var table = $('#taskResultsTable').DataTable();
+
+            // Setup column-specific search inputs
+            $('#taskResultsTable thead').append('<tr>');
+            $('#taskResultsTable thead th').each(function (i) {
+                var title = $(this).text();
+                $('#taskResultsTable thead tr:eq(1)').append('<th><input type="text" placeholder="Search ' + title + '" /></th>');
+
+                $('#taskResultsTable thead tr:eq(1) th:eq(' + i + ') input').on('keyup change', function () {
+                    if (table.column(i).search() !== this.value) {
+                        table
+                            .column(i)
+                            .search(this.value)
+                            .draw();
+                    }
+                    updateRowCount(table);
+                });
+            });
+
+            // Function to update row count based on filtering
+            function updateRowCount(table) {
+                $('#rowCount').text("Matched rows: " + table.rows({ search: 'applied' }).count());
+                $('#totalRowCount').text("Total rows: " + table.rows().count());
+            }
+
+            updateRowCount(table);
+        });
+    </script>
+</head>
+
+<body>
+    <h1>Task Results Report</h1>
+    <div id="rowCount">Matched rows: 0</div>
+    <div id="totalRowCount">Total rows: 0</div>
+    <div></br></div>
+    <table id="taskResultsTable" class="display">
+        <thead>
+            <tr>
+                <th>Query Name</th>
+                <th>Question</th>
+                <th>Is Query Generated</th>
+                <th>Generated Query</th>
+                <th>Golden Query</th>
+                <th>Tweaks</th>
+                <th>Is Results Comparison Fine</th>
+                <th>Results Comparison Error</th>
+                <th>Generation Time</th>
+                <th>Generated Query Runtime</th>
+                <th>Golden Query Runtime</th>
+                <th>Golden Query Tables</th>
+                <th>Generated Query Tables</th>
+                <th>Table Check</th>
+                <th>Query ID</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for result in task_results %}
+                <tr {% if not result.is_results_comparison_fine %}class="row-highlight"{% endif %}>
+                    <td>{{ result.query_info['query_name'] }}</td>
+                    <td>{{ result.query_info['question'] }}</td>
+                    <td>{{ result.is_query_generated }}</td>
+                    <td>{{ result.generated_query }}</td>
+                    <td>{{ result.query_info['golden_query'] }}</td>
+                    <td>{{ "None" if not result.query_info['tweaks'] else result.query_info['tweaks'] }}</td>
+                    <td>{{ result.is_results_comparison_fine }}</td>
+                    <td>{{ "None" if not result.results_comparison_error else result.results_comparison_error }}</td>
+                    <td>{{ round(result.generation_time, 2) }}</td>
+                    <td>{{ round(result.generated_query_runtime, 4) }}</td>
+                    <td>{{ round(result.golden_query_runtime, 4) }}</td>
+                    <td>{{ result.golden_query_tables }}</td>
+                    <td>{{ result.generated_query_tables }}</td>
+                    <td>{{ result.table_check }}</td>
+                    <td>{{ result.query_id }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+
+</html>

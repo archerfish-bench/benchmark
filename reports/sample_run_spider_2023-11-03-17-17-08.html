@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Task Results Report</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
+    <style>
+        body {
+            font-family: 'Verdana', sans-serif;
+        }
+
+        #taskResultsTable,
+        #taskResultsTable th,
+        #taskResultsTable td {
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Style for alternate rows */
+        #taskResultsTable tbody tr:nth-child(even) {
+            background-color: #f7fafc; /* A mild and pleasant color for alternate rows */
+        }
+
+        /* Style for rows with False in is_results_comparison_fine */
+        .row-highlight {
+            color: red;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            var table = $('#taskResultsTable').DataTable();
+
+            // Setup column-specific search inputs
+            $('#taskResultsTable thead').append('<tr>');
+            $('#taskResultsTable thead th').each(function (i) {
+                var title = $(this).text();
+                $('#taskResultsTable thead tr:eq(1)').append('<th><input type="text" placeholder="Search ' + title + '" /></th>');
+
+                $('#taskResultsTable thead tr:eq(1) th:eq(' + i + ') input').on('keyup change', function () {
+                    if (table.column(i).search() !== this.value) {
+                        table
+                            .column(i)
+                            .search(this.value)
+                            .draw();
+                    }
+                    updateRowCount(table);
+                });
+            });
+
+            // Function to update row count based on filtering
+            function updateRowCount(table) {
+                $('#rowCount').text("Matched rows: " + table.rows({ search: 'applied' }).count());
+                $('#totalRowCount').text("Total rows: " + table.rows().count());
+            }
+
+            updateRowCount(table);
+        });
+    </script>
+</head>
+
+<body>
+    <h1>Task Results Report</h1>
+    <div id="rowCount">Matched rows: 0</div>
+    <div id="totalRowCount">Total rows: 0</div>
+    <div></br></div>
+    <table id="taskResultsTable" class="display">
+        <thead>
+            <tr>
+                <th>Query Name</th>
+                <th>Question</th>
+                <th>Is Query Generated</th>
+                <th>Generated Query</th>
+                <th>Golden Query</th>
+                <th>Tweaks</th>
+                <th>Is Results Comparison Fine</th>
+                <th>Results Comparison Error</th>
+                <th>Generation Time</th>
+                <th>Generated Query Runtime</th>
+                <th>Golden Query Runtime</th>
+                <th>Golden Query Tables</th>
+                <th>Generated Query Tables</th>
+                <th>Table Check</th>
+                <th>Query ID</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+                <tr >
+                    <td>spider_4</td>
+                    <td>What are the names, countries, and ages for every singer in descending order of age?</td>
+                    <td>True</td>
+                    <td>SELECT
+    name,
+    country,
+    age
+FROM spider_dev.concert_singer.singer
+ORDER BY
+    age DESC
+</td>
+                    <td>SELECT name ,  country ,  age FROM spider_dev.concert_singer.singer ORDER BY age DESC</td>
+                    <td>None</td>
+                    <td>True</td>
+                    <td>None</td>
+                    <td>7.99</td>
+                    <td>1.1495</td>
+                    <td>0.3635</td>
+                    <td>['singer']</td>
+                    <td>{'singer'}</td>
+                    <td>True</td>
+                    <td>dd510dd4-849c-41f9-8471-42fa91d76965</td>
+                </tr>
+            
+                <tr >
+                    <td>spider_7</td>
+                    <td>Show the song name and the release year of the song by the youngest singer. age column in singer table presents singer age. Show 1 row.</td>
+                    <td>True</td>
+                    <td>WITH youngest_singer AS (
+    SELECT singer_id
+    FROM spider_dev.concert_singer.singer
+    ORDER BY
+        age
+    LIMIT 1
+)
+
+SELECT
+    song_name,
+    song_release_year
+FROM spider_dev.concert_singer.singer AS s
+INNER JOIN spider_dev.concert_singer.singer_in_concert AS sc
+    ON s.singer_id = sc.singer_id
+WHERE
+    s.singer_id IN (
+        SELECT singer_id
+        FROM youngest_singer
+    )
+LIMIT 1
+</td>
+                    <td>SELECT song_name ,  song_release_year FROM spider_dev.concert_singer.singer ORDER BY age LIMIT 1</td>
+                    <td>None</td>
+                    <td>True</td>
+                    <td>None</td>
+                    <td>9.72</td>
+                    <td>0.3288</td>
+                    <td>0.3077</td>
+                    <td>['singer']</td>
+                    <td>['SINGER_IN_CONCERT', 'SINGER']</td>
+                    <td>False</td>
+                    <td>fbe8c487-bb42-457e-a845-bf8cdb53c836</td>
+                </tr>
+            
+                <tr >
+                    <td>spider_9</td>
+                    <td>What are all distinct countries where singers above age 20 are from?</td>
+                    <td>True</td>
+                    <td>SELECT DISTINCT country
+FROM spider_dev.concert_singer.singer
+WHERE
+    age > 20
+</td>
+                    <td>SELECT DISTINCT country FROM spider_dev.concert_singer.singer WHERE age  >  20</td>
+                    <td>None</td>
+                    <td>True</td>
+                    <td>None</td>
+                    <td>7.99</td>
+                    <td>0.3432</td>
+                    <td>0.3057</td>
+                    <td>['singer']</td>
+                    <td>{'singer'}</td>
+                    <td>True</td>
+                    <td>addd9454-c03c-496f-a8e8-bcad53951d3d</td>
+                </tr>
+            
+                <tr >
+                    <td>spider_11</td>
+                    <td>Show all countries and the number of singers in each country. Display as num_singers.</td>
+                    <td>True</td>
+                    <td>SELECT
+    country,
+    COUNT(singer_id) AS num_singers
+FROM spider_dev.concert_singer.singer
+GROUP BY
+    country
+</td>
+                    <td>SELECT country ,  count(*) as num_singers FROM spider_dev.concert_singer.singer GROUP BY country</td>
+                    <td>None</td>
+                    <td>True</td>
+                    <td>None</td>
+                    <td>6.44</td>
+                    <td>0.2992</td>
+                    <td>0.2942</td>
+                    <td>['singer']</td>
+                    <td>{'singer'}</td>
+                    <td>True</td>
+                    <td>d0748e74-eb0a-4a70-b840-18c401c33ba1</td>
+                </tr>
+            
+                <tr >
+                    <td>spider_12</td>
+                    <td>How many singers are from each country? Display as num_singers.</td>
+                    <td>True</td>
+                    <td>SELECT
+    country,
+    COUNT(*) AS num_singers
+FROM spider_dev.concert_singer.singer
+GROUP BY
+    country
+</td>
+                    <td>SELECT country ,  count(*) as num_singers FROM spider_dev.concert_singer.singer GROUP BY country</td>
+                    <td>None</td>
+                    <td>True</td>
+                    <td>None</td>
+                    <td>5.57</td>
+                    <td>0.3029</td>
+                    <td>0.445</td>
+                    <td>['singer']</td>
+                    <td>{'singer'}</td>
+                    <td>True</td>
+                    <td>96b50c1e-99f8-4ce5-965b-41a836c3b746</td>
+                </tr>
+            
+                <tr class="row-highlight">
+                    <td>spider_13</td>
+                    <td>List all song names by singers above the average age.</td>
+                    <td>True</td>
+                    <td>WITH avg_age AS (
+    SELECT AVG(age) AS average_age
+    FROM spider_dev.concert_singer.singer
+)
+
+SELECT song_name
+FROM spider_dev.concert_singer.singer AS s
+INNER JOIN spider_dev.concert_singer.singer_in_concert AS sic
+    ON s.singer_id = sic.singer_id
+WHERE
+    age > (
+        SELECT average_age
+        FROM avg_age
+    )
+</td>
+                    <td>SELECT song_name FROM spider_dev.concert_singer.singer WHERE age  >  (SELECT avg(age) FROM spider_dev.concert_singer.singer)</td>
+                    <td>None</td>
+                    <td>False</td>
+                    <td>Number of rows are different, example: exp={'song_name': 'Gentleman'}, act={'song_name': 'You'}, #exp=2, #act=3</td>
+                    <td>7.42</td>
+                    <td>0.2833</td>
+                    <td>0.2987</td>
+                    <td>['singer']</td>
+                    <td>['SINGER_IN_CONCERT', 'SINGER']</td>
+                    <td>False</td>
+                    <td>9cdc1ec8-15cd-4dd5-b325-7118c6a3c72c</td>
+                </tr>
+            
+                <tr >
+                    <td>spider_15</td>
+                    <td>Show location and name for all stadiums with a capacity between 5000 and 10000.</td>
+                    <td>True</td>
+                    <td>SELECT
+    name,
+    location
+FROM spider_dev.concert_singer.stadium
+WHERE
+    capacity BETWEEN 5000 AND 10000
+</td>
+                    <td>SELECT LOCATION ,  name FROM spider_dev.concert_singer.stadium WHERE capacity BETWEEN 5000 AND 10000</td>
+                    <td>None</td>
+                    <td>True</td>
+                    <td>None</td>
+                    <td>6.54</td>
+                    <td>0.33</td>
+                    <td>0.2929</td>
+                    <td>['stadium']</td>
+                    <td>{'stadium'}</td>
+                    <td>True</td>
+                    <td>1be79a6f-d2f9-4c55-91bc-f60e5288175c</td>
+                </tr>
+            
+                <tr >
+                    <td>spider_19</td>
+                    <td>What is the name and capacity for the stadium with highest average attendance?</td>
+                    <td>True</td>
+                    <td>SELECT
+    name,
+    capacity
+FROM spider_dev.concert_singer.stadium
+WHERE
+    average = (
+        SELECT MAX(average)
+        FROM spider_dev.concert_singer.stadium
+    )
+</td>
+                    <td>SELECT name ,  capacity FROM spider_dev.concert_singer.stadium ORDER BY average DESC LIMIT 1</td>
+                    <td>None</td>
+                    <td>True</td>
+                    <td>None</td>
+                    <td>6.47</td>
+                    <td>0.2902</td>
+                    <td>0.2986</td>
+                    <td>['stadium']</td>
+                    <td>{'stadium'}</td>
+                    <td>True</td>
+                    <td>ff78284a-ee97-40e8-8048-4c05dd25e1c8</td>
+                </tr>
+            
+        </tbody>
+    </table>
+</body>
+
+</html>

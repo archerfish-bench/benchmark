@@ -1,0 +1,70 @@
+spider_703:
+  query_name: spider_703
+  question: What are the names of all the countries that became independent after
+    1950?
+  comparison_rules:
+  - columns:
+    - Name
+    match: exact
+  golden_query: SELECT Name FROM country WHERE IndepYear  >  1950
+  schemas:
+  - world_1
+  auto_select_schema: 'false'
+spider_704:
+  query_name: spider_704
+  question: Give the names of the nations that were founded after 1950.
+  comparison_rules:
+  - columns:
+    - Name
+    match: exact
+  golden_query: SELECT Name FROM country WHERE IndepYear  >  1950
+  schemas:
+  - world_1
+  auto_select_schema: 'false'
+spider_706:
+  query_name: spider_706
+  question: How many countries have governments with GovernmentForm = 'Republic'?
+    Display as num_cont.
+  comparison_rules:
+  - columns:
+    - num_cont
+    match: exact
+  golden_query: SELECT count(*) as num_cont FROM country WHERE
+    GovernmentForm  =  'Republic'
+  schemas:
+  - world_1
+spider_707:
+  query_name: spider_707
+  question: What is the total surface area of the countries in the Caribbean region?
+    Display as tot_surface
+  comparison_rules:
+  - columns:
+    - tot_surface
+    match: exact
+  golden_query: SELECT sum(SurfaceArea) as tot_surface FROM country
+    WHERE Region  =  'Caribbean'
+  schemas:
+  - world_1
+  auto_select_schema: 'false'
+spider_710:
+  query_name: spider_710
+  question: What is the continent name which Anguilla belongs to?
+  comparison_rules:
+  - columns:
+    - Continent
+    match: exact
+  golden_query: SELECT Continent FROM country WHERE Name  =  'Anguilla'
+  schemas:
+  - world_1
+  auto_select_schema: 'false'
+spider_863:
+  query_name: spider_863
+  question: How many high schoolers are there? Display as num_stu
+  comparison_rules:
+  - columns:
+    - num_stu
+    match: exact
+  golden_query: SELECT count(*) as num_stu FROM Highschooler
+  schemas:
+  - network_1
+  auto_select_schema: 'false'
