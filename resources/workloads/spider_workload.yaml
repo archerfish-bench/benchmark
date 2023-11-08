@@ -7882,7 +7882,7 @@ spider_498:
 spider_499:
   query_name: spider_499
   question: What are the different ids and names of the battles that lost any 'Brig'
-    type shipes?
+    type ships?
   golden_query: SELECT DISTINCT T1.id ,  T1.name FROM spider_dev.battle_death.battle
     AS T1 JOIN spider_dev.battle_death.ship AS T2 ON T1.id  =  T2.lost_in_battle WHERE
     T2.ship_type  =  'Brig'

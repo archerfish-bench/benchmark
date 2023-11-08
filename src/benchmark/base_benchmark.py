@@ -293,26 +293,6 @@ class BenchmarkBase:
         return result, error
 
     @abstractmethod
-    def create_golden_query_engine(self, benchmark_config_data: dict):
-        """
-        Create a SQLAlchemy engine and inspector for the given Snowflake connection details.
-        If needed, override in derived classes and get different engines for different databases.
-        Args:
-            benchmark_config_data: Benchmark configuration data as a dictionary
-        """
-        db_conf = benchmark_config_data['golden_result_db']
-        user_name = db_conf['user_name']
-        password = quote_plus(db_conf['password'])
-        account = db_conf['account']
-        database = db_conf['database']
-
-        # Create the connection URL
-        connection_url = f'snowflake://{user_name}:{password}@{account}/{database}/'
-        engine = sa.create_engine(connection_url)
-        inspector = inspect(engine)
-        return engine, inspector
-
-    @abstractmethod
     def generate_query(self, query_info: dict) -> TaskResult:
         """
         Generate query, run it and get results

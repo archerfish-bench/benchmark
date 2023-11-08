@@ -10,7 +10,7 @@ from llama_index.llms import OpenAI
 from overrides import override
 from sqlalchemy import create_engine, inspect
 
-from benchmark.base_benchmark import BenchmarkBase, TaskResult
+from base_benchmark import BenchmarkBase, TaskResult
 
 # Assumption is that you will have OPENAI key in your environment variable
 openai.api_key = os.environ.get('OPENAI_API_KEY')
@@ -26,32 +26,22 @@ class LlamaIndexBenchmark(BenchmarkBase):
         self.llama_index_query_engine = None
         self.table_names = None
 
-    @override
-    def create_golden_query_engine(self, benchmark_config_data: dict):
-        """
-        Create golden query engine for the benchmark
-        """
-        try:
-            connection_uri = benchmark_config_data.get('db_connection', None)
-            engine = create_engine(connection_uri, connect_args={'check_same_thread': False})
-            inspector = inspect(engine)
-            self.table_names = inspector.get_table_names()
-            return engine, inspector
-        except Exception as ex:
-            logging.error(f"Error while connecting to database: {ex}")
-            print(f"Unable to connect to DB {connection_uri}. Check if you can modify the connection string in config file with absolute path")
-            raise ex
-
     def setup(self, benchmark_config: dict):
         # This takes care of setting up the golden query engine
         # self.engine should contain the golden query engine
         super().setup(benchmark_config)
 
+        print(f"Source conn: {self.source_db_connector.get_db_type()}, target: {self.target_db_connector.get_db_type()}")
+
         # llama-index
         try:
-            llm = OpenAI(temperature=0.5, model="gpt-4-0613")
+            self.engine = self.target_db_connector.engine
+            inspector = inspect(self.engine)
+            self.table_names = inspector.get_table_names()
+
+            llm = OpenAI(temperature=0.0, model="gpt-4-0613")
             service_context = ServiceContext.from_defaults(llm=llm)
-            sql_database = SQLDatabase(self.engine)
+            sql_database = SQLDatabase(engine=self.engine)
 
             self.llama_index_query_engine = NLSQLTableQueryEngine(
                 sql_database=sql_database,
