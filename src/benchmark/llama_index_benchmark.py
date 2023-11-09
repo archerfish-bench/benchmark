@@ -1,4 +1,6 @@
 import logging
+import sys
+
 import openai
 import os.path
 import time
@@ -29,6 +31,10 @@ class LlamaIndexBenchmark(BenchmarkBase):
         self.token_counter = None
         self.llama_index_query_engine = None
         self.table_names = None
+        logging.basicConfig(
+            stream=sys.stdout, level=logging.INFO
+        )  # logging.DEBUG for more verbose output
+        logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
 
     def setup(self, benchmark_config: dict):
         # This takes care of setting up the golden query engine

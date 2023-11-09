@@ -6,7 +6,7 @@ import uuid
 from waii_sdk_py import WAII
 from waii_sdk_py.semantic_context import SemanticStatement, ModifySemanticContextRequest
 
-from benchmark.constants import WAII_CONTEXT, WAII_DB_CONNECTION_KEY
+from constants import WAII_CONTEXT, WAII_DB_CONNECTION_KEY
 
 
 def add_contexts(config: dict):
