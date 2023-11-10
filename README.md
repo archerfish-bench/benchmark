@@ -1,5 +1,8 @@
 # Benchmark
-This is a benchmarking framework designed for evaluating the performance of text-to-SQL generation tasks.
+
+This is a benchmarking framework designed for evaluating the capabilities of NL2SQL systems. It was introduced in the CIDR paper (<TBD link>).
+
+The benchmark originated in a collaboration between Microsoft and Waii. Contributions and additions are welcome.
 
 ![Highlevel benchmark detail](Highlevel_Benchmark_Detail.png)
 
