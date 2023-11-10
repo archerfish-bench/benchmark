@@ -1,10 +1,10 @@
 # Archerfish Benchmark
 
-![alt text](https://github.com/archerfish-bench/benchmark/blob/main/logo.jpg?raw=true)
+<img align="left" src="https://github.com/archerfish-bench/benchmark/blob/main/logo.jpg" width="200">
 
-This is a benchmarking framework designed for evaluating the capabilities of NL2SQL systems. It was introduced in the CIDR paper (<TBD link>).
+Welcome to Archerfish, a benchmarking framework designed for evaluating the capabilities of NL2SQL systems. The speciality of Archerfish is that it focusses on the user's intent rather than simply on correctness. Continued work is intended to improve the testing of resolution of ambiguity as well as harmful content.
 
-The benchmark originated in a collaboration between Microsoft and Waii. Contributions and additions are welcome.
+It was introduced in the CIDR paper (<TBD link>). The benchmark originated in a collaboration between Microsoft and Waii. Contributions and additions are welcome. Please reach out to (...) for more information.
 
 ![Highlevel benchmark detail](Highlevel_Benchmark_Detail.png)
 
