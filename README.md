@@ -8,9 +8,10 @@ The idea was introduced in the CIDR paper [TBD Link](http://404.html).
 
 The benchmark originated in a collaboration between [Microsoft](www.microsoft.com) and [Waii](www.waii.ai). Contributions and additions are welcome. Please reach out to (...) for more information.
 
+# Benchmark Details
+
 ![Highlevel benchmark detail](Highlevel_Benchmark_Detail.png)
 
-# Benchmark Details
 - Driver program reads the benchmark config and workload config and runs the benchmark.
 - Benchmark config contains details about the benchmark, such as benchmark name, database connection details, etc.
 - Workload config contains details about the workload, such as queries to run, etc.
