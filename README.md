@@ -1,6 +1,6 @@
 # Archerfish Benchmark
 
-![alt text](https://github.com/archerfish-bench/benchmark/blob/main/image.jpg?raw=true)
+![alt text](https://github.com/archerfish-bench/benchmark/blob/main/logo.jpg?raw=true)
 
 This is a benchmarking framework designed for evaluating the capabilities of NL2SQL systems. It was introduced in the CIDR paper (<TBD link>).
 
