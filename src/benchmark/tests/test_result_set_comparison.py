@@ -127,16 +127,30 @@ class TestCompareResults(unittest.TestCase):
                           "Comparison failed for row: exp={'a': 1, 'b': 'test'}, act={'a': 1, 'b': "
                           "'testing'}"), compare_results(expected, actual, rules))
 
-    def test_compare_same_column_names_within_rows_match(self):
+    def test_compare_same_column_names_within_rows_match_1(self):
         expected = [{'a': 1, 'b': 'test'}, {'a': None, 'b': 'hello'}]
-        actual = [{'x': 1, 'y': 'test'}, {'x': None, 'y': 'hello'}]
+        actual = [{'a': 1, 'b': 'test'}, {'a': None, 'b': 'hello'}]
         rules = [{'match': 'exact', 'columns': ['a', 'b']}]
         self.assertEqual(compare_results(expected, actual, rules), (True, ""))
 
-    def test_compare_same_column_names_within_rows_match(self):
+    def test_compare_same_column_names_within_rows_match_2(self):
         expected = [{'a': 1, 'b': 'test', 'c': 1}, {'a': None, 'b': 'hello', 'c': 2}]
         actual = [{'x': 1, 'y': 'test', 'z': 1}, {'x': None, 'y': 'hello', 'z': 2}]
         rules = [{'match': 'exact', 'columns': ['a', 'b']}]
+        self.assertEqual(compare_results(expected, actual, rules), (True, ""))
+
+        expected = [{'a': 1, 'b': 'test', 'c': 1}, {'a': None, 'b': 'hello', 'c': 2}]
+        actual = [{'a': 1, 'b': 'test', 'c': 1}, {'a': None, 'b': 'hello', 'c': 2}]
+        self.assertEqual(compare_results(expected, actual, rules), (True, ""))
+
+    def test_dedup_compare_same_column_names_within_rows_match_2(self):
+        expected = [{'a': 1, 'b': 'test', 'c': 1}, {'a': 1, 'b': 'test', 'c': 1}]
+        actual = [{'x': 1, 'y': 'test', 'z': 1}, {'x': 1, 'y': 'test', 'z': 1}]
+        rules = [{'match': 'exact', 'columns': ['a', 'b']}]
+        self.assertEqual(compare_results(expected, actual, rules), (True, ""))
+
+        expected = [{'a': 1, 'b': 'test', 'c': 1}, {'a': 1, 'b': 'test', 'c': 1}]
+        actual = [{'a': 1, 'b': 'test', 'c': 1}, {'a': 1, 'b': 'test', 'c': 1}]
         self.assertEqual(compare_results(expected, actual, rules), (True, ""))
 
     def test_compare_same_column_names_within_rows_no_match(self):

@@ -144,6 +144,7 @@ You need help to fix it, there're some issues:
 Output (only produce Python program):
 """
 import json
+import logging
 from typing import Optional
 
 
@@ -186,7 +187,7 @@ def compare_results(expected, actual, comparison_rules,
         for rule in comparison_rules:
             rule["columns"] = [column.lower() for column in rule["columns"]]
 
-    def remove_duplicates(input_list):
+    def remove_duplicates(input_list, columns: list = None):
         """
         Remove duplicates from list(dict)
         Weird that dict in python is not hashable, so we need to convert it to tuple
@@ -195,13 +196,34 @@ def compare_results(expected, actual, comparison_rules,
         result = []
         for item in input_list:
             # Convert dict to a tuple of items
-            tuple_representation = tuple(item.items())
+            # If columns are specified, use only those for creating tuple_representation
+            if columns:
+                tuple_representation = tuple((k, item[k]) for k in columns if k in item)
+            else:
+                # If no columns specified, use all columns
+                tuple_representation = tuple(item.items())
             if tuple_representation not in seen:
                 seen[tuple_representation] = True
                 result.append(item)
         return result
 
     # Get unique elements. We don't bother about duplicates in final result
+    # First get all columns from comparison_rules
+    cols = []
+    for rule in comparison_rules:
+        cols.extend(rule['columns'])
+
+    if len(expected) > 0 and len(actual) > 0:
+        expected_cols = expected[0].keys()
+        actual_cols = actual[0].keys()
+
+        # Proceed with de-dup only when expected and actual cols are same
+        if expected_cols == actual_cols:
+            expected = remove_duplicates(expected, cols)
+            actual = remove_duplicates(actual, cols)
+        else:
+            logging.info("Expected and actual columns are different, skipping de-duplication in results")
+
     expected = remove_duplicates(expected)
     actual = remove_duplicates(actual)
 
