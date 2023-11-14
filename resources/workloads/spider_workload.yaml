@@ -3898,7 +3898,7 @@ spider_241:
   - flight_2
 spider_242:
   query_name: spider_242
-  question: Find all airlines that have at least 10 flights.
+  question: Find all airlines that have at least 10 flights. Display airline.
   golden_query: SELECT T1.Airline FROM spider_dev.flight_2.AIRLINES AS T1 JOIN spider_dev.flight_2.FLIGHTS
     AS T2 ON T1.uid  =  T2.Airline GROUP BY T1.Airline HAVING count(*)  >  10
   tables:
@@ -3913,7 +3913,7 @@ spider_242:
   - flight_2
 spider_243:
   query_name: spider_243
-  question: Which airlines have at least 10 flights?
+  question: Which airlines have at least 10 flights?. Display airline.
   golden_query: SELECT T1.Airline FROM spider_dev.flight_2.AIRLINES AS T1 JOIN spider_dev.flight_2.FLIGHTS
     AS T2 ON T1.uid  =  T2.Airline GROUP BY T1.Airline HAVING count(*)  >  10
   tables:
@@ -3928,7 +3928,7 @@ spider_243:
   - flight_2
 spider_244:
   query_name: spider_244
-  question: Find all airlines that have fewer than 200 flights.
+  question: Find all airlines that have fewer than 200 flights. Display airline.
   golden_query: SELECT T1.Airline FROM spider_dev.flight_2.AIRLINES AS T1 JOIN spider_dev.flight_2.FLIGHTS
     AS T2 ON T1.uid  =  T2.Airline GROUP BY T1.Airline HAVING count(*)  <  200
   tables:
@@ -3943,7 +3943,7 @@ spider_244:
   - flight_2
 spider_245:
   query_name: spider_245
-  question: Which airlines have less than 200 flights?
+  question: Which airlines have less than 200 flights?. Display airline.
   golden_query: SELECT T1.Airline FROM spider_dev.flight_2.AIRLINES AS T1 JOIN spider_dev.flight_2.FLIGHTS
     AS T2 ON T1.uid  =  T2.Airline GROUP BY T1.Airline HAVING count(*)  <  200
   tables:
