@@ -141,5 +141,35 @@
     "statement": "makeid in car_names is the foreign key of maker in model_list",
     "scope": "SPIDER_DEV.car_1",
     "labels": []
+  },
+  {
+    "id": "d228ff1e-ceea-46b2-b77f-08ef3c1525c4",
+    "statement": "city,DestAirport,SourceAirport,AirportCode,AirportName,Country,Abbreviation should be with exact comparison. Do not change string for comparions. Do not use LIKE , ILIKE",
+    "scope": "SPIDER_DEV.FLIGHT_2",
+    "labels": null
+  },
+  {
+    "id": "d238ff1e-ceea-46b2-b77f-08ef3c1525c4",
+    "statement": "pettype, should be with exact comparison. Do not change string for comparison.Do not use LIKE , ILIKE",
+    "scope": "SPIDER_DEV.PETS_1",
+    "labels": null
+  },
+  {
+    "id": "d248ff1e-ceea-46b2-b77f-08ef3c1525c4",
+    "statement": "CountryName,Model,FullName, should be with exact comparison. Do not change string for comparison. Do not use LIKE , ILIKE ",
+    "scope": "SPIDER_DEV.car_1",
+    "labels": null
+  },
+  {
+    "id": "d258ff1e-ceea-46b2-b77f-08ef3c1525c4",
+    "statement": "episode should be with exact comparison. Do not change string for comparison. Do not use LIKE , ILIKE",
+    "scope": "SPIDER_DEV.tvshow",
+    "labels": null
+  },
+  {
+    "id": "d259ff1e-ceea-46b2-b77f-08ef3c1525c4",
+    "statement": "LANGUAGE, continent, governmentform should be with exact comparison. Do not change string for comparison. Do not use LIKE , ILIKE",
+    "scope": "SPIDER_DEV.world_1",
+    "labels": null
   }
 ]
