@@ -8591,12 +8591,7 @@ spider_542:
   question: Which student has enrolled for the most times in any program? List the
     id, first name, middle name, last name, the number of enrollments and student
     id.
-  golden_query: "WITH student_count AS (\nSELECT\ndegree_program_id,\nCOUNT(student_id)
-    AS student_num\nFROM spider_dev.student_transcripts_tracking.student_enrolment\n
-    GROUP BY\ndegree_program_id\n)\n\nSELECT\ndp.degree_program_id,\ndp.degree_summary_description\n
-    FROM student_count AS sc\nINNER JOIN spider_dev.student_transcripts_tracking.degree_programs
-    AS dp\nON sc.degree_program_id = dp.degree_program_id\nORDER BY\nsc.student_num
-    DESC\nLIMIT 1"
+  golden_query: "WITH ENROLLMENTCOUNTS AS (SELECT STUDENT_ID, COUNT(*) AS NUM_ENROLLMENTS FROM SPIDER_DEV.STUDENT_TRANSCRIPTS_TRACKING.STUDENT_ENROLMENT GROUP BY STUDENT_ID), MAXENROLLMENT AS (SELECT STUDENT_ID, NUM_ENROLLMENTS FROM ENROLLMENTCOUNTS ORDER BY NUM_ENROLLMENTS DESC LIMIT 1) SELECT S.STUDENT_ID, FIRST_NAME, MIDDLE_NAME, LAST_NAME, NUM_ENROLLMENTS FROM MAXENROLLMENT AS ME INNER JOIN SPIDER_DEV.STUDENT_TRANSCRIPTS_TRACKING.STUDENTS AS S ON ME.STUDENT_ID = S.STUDENT_ID"
   tables:
   - student_enrolment
   - degree_programs
