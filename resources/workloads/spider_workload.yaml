@@ -15795,7 +15795,7 @@ spider_996:
 spider_997:
   query_name: spider_997
   question: What are all the possible breed type and size type combinations? Breed
-    type and size type are available in dogs table.
+    type and size type are available in dogs table. Display breed code and size code.
   golden_query: SELECT DISTINCT breed_code ,  size_code FROM spider_dev.dog_kennels.dogs
   tables:
   - dogs
@@ -15809,7 +15809,7 @@ spider_997:
   - dog_kennels
 spider_998:
   query_name: spider_998
-  question: Find the distinct breed type and size code combinations for dogs.
+  question: Find the distinct breed type and size code combinations for dogs. Display breed code and size code.
   golden_query: SELECT DISTINCT breed_code ,  size_code FROM spider_dev.dog_kennels.dogs
   tables:
   - dogs
