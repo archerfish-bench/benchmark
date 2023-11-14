@@ -9834,7 +9834,7 @@ spider_620:
   - tvshow
 spider_621:
   query_name: spider_621
-  question: When did the episode 'A Love of a Lifetime' air?
+  question: When did the tv series episode 'A Love of a Lifetime' air?
   golden_query: SELECT Air_Date FROM spider_dev.tvshow.TV_series WHERE Episode = 'A
     Love of a Lifetime';
   tables:

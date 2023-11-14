@@ -122,6 +122,7 @@ class LlamaIndexBenchmark(BenchmarkBase):
             logging.error(f"Error: {ex}")
             result.is_query_generated = False
             result.results_comparison_error = str(ex)
+            return result
 
     @override
     def cleanup(self):

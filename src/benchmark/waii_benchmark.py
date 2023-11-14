@@ -107,11 +107,13 @@ class WaiiBenchmark(BenchmarkBase):
             logging.error(f"YAML Parsing Error: {e}")
             result.is_query_generated = False
             result.results_comparison_error = str(e)
+            return result
         except Exception as ex:
             # Handle other exceptions that may occur during query execution
             logging.error(f"Error: {ex}")
             result.is_query_generated = False
             result.results_comparison_error = str(ex)
+            return result
 
     def generate_initial_query(self, question, result, search_context):
         # Generate the query
