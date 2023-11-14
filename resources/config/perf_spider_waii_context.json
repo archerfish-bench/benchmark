@@ -171,5 +171,11 @@
     "statement": "LANGUAGE, continent, governmentform should be with exact comparison. Do not change string for comparison. Do not use LIKE , ILIKE",
     "scope": "SPIDER_DEV.world_1",
     "labels": null
+  },
+  {
+    "id": "d269ff1e-ceea-46b2-b77f-08ef3c1525c4",
+    "statement": "major_record_format should be with exact comparison. Do not change string for comparison. Do not use LIKE , ILIKE",
+    "scope": "SPIDER_DEV.orchestra",
+    "labels": null
   }
 ]
