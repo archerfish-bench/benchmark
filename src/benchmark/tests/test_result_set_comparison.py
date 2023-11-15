@@ -161,6 +161,23 @@ class TestCompareResults(unittest.TestCase):
                           "Comparison failed for row: exp={'a': None, 'b': 'hello'}, act={'x': 2, 'y': "
                           "'hello'}"), compare_results(expected, actual, rules))
 
+    def test_compare_string_with_int(self):
+        expected = [{'a': 0, 'b': '1', 'c': 2.5}, {'a': 0.0, 'b': '1.5', 'c': 3.67}]
+        actual = [{'a': '0', 'b': 1, 'c': '2.5'}, {'a': '0.0', 'b': 1.5, 'c': '3.67'}]
+        rules = [{'match': 'exact', 'columns': ['a', 'b', 'c']}]
+        self.assertEqual(compare_results(expected, actual, rules), (True, ""))
+
+    def test_compare_null_with_0(self):
+        expected = [{'a': 0, 'b': '1', 'c': None}, {'a': 0.0, 'b': '1.5', 'c': None}]
+        actual = [{'a': '0', 'b': 1, 'c': 0}, {'a': '0.0', 'b': 1.5, 'c': 0}]
+        rules = [{'match': 'exact', 'columns': ['a', 'b', 'c']}]
+        self.assertEqual(compare_results(expected, actual, rules), (True, ""))
+
+        expected = [{'a': 0, 'b': '1', 'c': 0}, {'a': 0.0, 'b': '1.5', 'c': 0}]
+        actual = [{'a': '0', 'b': 1, 'c': None}, {'a': '0.0', 'b': 1.5, 'c': None}]
+        rules = [{'match': 'exact', 'columns': ['a', 'b', 'c']}]
+        self.assertNotEquals(compare_results(expected, actual, rules), (True, ""))
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -251,12 +251,22 @@ def compare_results(expected, actual, comparison_rules,
                     return False
                 for key in actual_row.keys():
                     if expected_value is None:
-                        if actual_row[key] is None:
+                        if actual_row[key] is None or actual_row[key] == 0:
                             matched = True
                             del actual_row[key]
                             break
                     elif isinstance(expected_value, str) and isinstance(actual_row[key], str):
                         if expected_value == actual_row[key]:
+                            matched = True
+                            del actual_row[key]
+                            break
+                    elif isinstance(expected_row[column], str) and isinstance(actual_row[key], (int, float)):
+                        if expected_row[column] == str(actual_row[key]):
+                            matched = True
+                            del actual_row[key]
+                            break
+                    elif isinstance(expected_row[column], (int, float)) and isinstance(actual_row[key], str):
+                        if str(expected_row[column]) == actual_row[key]:
                             matched = True
                             del actual_row[key]
                             break

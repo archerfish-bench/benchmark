@@ -337,16 +337,14 @@ spider_22:
 spider_23:
   query_name: spider_23
   question: Show the stadium name and the number of concerts in each stadium. Display
-    as num_concerts.
-  golden_query: SELECT T2.name ,  count(*) as num_concerts FROM spider_dev.concert_singer.concert
-    AS T1 JOIN spider_dev.concert_singer.stadium AS T2 ON T1.stadium_id  =  T2.stadium_id
-    GROUP BY T2.name
+    as stadium_name, num_concerts.
+  golden_query: SELECT name AS stadium_name, COUNT(concert_id) AS num_concerts FROM spider_dev.concert_singer.stadium AS s LEFT JOIN spider_dev.concert_singer.concert AS c ON s.stadium_id = c.stadium_id GROUP BY name
   tables:
   - stadium
   - concert
   comparison_rules:
   - columns:
-    - name
+    - stadium_name
     - num_concerts
     match: exact
   auto_select_schema: 'false'
@@ -354,16 +352,14 @@ spider_23:
   - concert_singer
 spider_24:
   query_name: spider_24
-  question: For each stadium, how many concerts play there? Display as num_concerts.
-  golden_query: SELECT T2.name ,  count(*) as num_concerts FROM spider_dev.concert_singer.concert
-    AS T1 JOIN spider_dev.concert_singer.stadium AS T2 ON T1.stadium_id  =  T2.stadium_id
-    GROUP BY T2.name
+  question: For each stadium, how many concerts play there? Display as stadium_name, num_concerts.
+  golden_query: SELECT name as stadium_name, COALESCE(num_concerts, 0) AS num_concerts FROM spider_dev.concert_singer.stadium AS s LEFT JOIN ( SELECT stadium_id, COUNT(*) AS num_concerts FROM spider_dev.concert_singer.concert GROUP BY stadium_id ) AS c ON s.stadium_id = TRY_TO_NUMBER(c.stadium_id)
   tables:
   - stadium
   - concert
   comparison_rules:
   - columns:
-    - name
+    - stadium_name
     - num_concerts
     match: exact
   auto_select_schema: 'false'
@@ -1748,9 +1744,7 @@ spider_107:
   query_name: spider_107
   question: What is the name of each continent and how many car makers are there in
     each one? Display as num_makers.
-  golden_query: SELECT T1.Continent ,  count(*) as num_makers FROM spider_dev.car_1.CONTINENTS
-    AS T1 JOIN spider_dev.car_1.COUNTRIES AS T2 ON T1.ContId  =  T2.continent JOIN
-    spider_dev.car_1.car_makers AS T3 ON T2.CountryId  =  T3.Country GROUP BY T1.Continent;
+  golden_query: SELECT cont.continent AS continent_name, COUNT(DISTINCT id) AS num_makers FROM spider_dev.car_1.continents AS cont LEFT JOIN spider_dev.car_1.countries AS cn ON contid = cn.continent LEFT JOIN spider_dev.car_1.car_makers AS cm ON countryid = country GROUP BY cont.continent ORDER BY num_makers DESC
   tables:
   - COUNTRIES
   - CONTINENTS
@@ -5414,9 +5408,7 @@ spider_342:
   query_name: spider_342
   question: Show all template type codes and the number of documents using each type.
     Display as num_docs.
-  golden_query: SELECT T1.template_type_code ,  count(*) as num_docs FROM spider_dev.cre_Doc_Template_Mgt.Templates
-    AS T1 JOIN spider_dev.cre_Doc_Template_Mgt.Documents AS T2 ON T1.template_id  =  T2.template_id
-    GROUP BY T1.template_type_code
+  golden_query: SELECT r.template_type_code, COUNT(document_id) AS num_docs FROM spider_dev.cre_doc_template_mgt.ref_template_types AS r LEFT JOIN spider_dev.cre_doc_template_mgt.templates AS t ON r.template_type_code = t.template_type_code LEFT JOIN spider_dev.cre_doc_template_mgt.documents AS d ON t.template_id = d.template_id GROUP BY r.template_type_code ORDER BY num_docs DESC NULLS LAST
   tables:
   - Templates
   - Documents
@@ -5879,9 +5871,7 @@ spider_371:
   query_name: spider_371
   question: What are the ids and names of each document, as well as the number of
     paragraphs in each? Display as num_para.
-  golden_query: SELECT T1.document_id ,  T2.document_name ,  count(*) as num_para
-    FROM spider_dev.cre_Doc_Template_Mgt.Paragraphs AS T1 JOIN spider_dev.cre_Doc_Template_Mgt.Documents
-    AS T2 ON T1.document_id  =  T2.document_id GROUP BY T1.document_id ,  T2.document_name
+  golden_query: WITH paragraphcount AS ( SELECT document_id, COUNT(paragraph_id) AS num_para FROM spider_dev.cre_doc_template_mgt.paragraphs GROUP BY document_id ) SELECT d.document_id, document_name, num_para FROM spider_dev.cre_doc_template_mgt.documents AS d LEFT JOIN paragraphcount AS p ON d.document_id = p.document_id
   tables:
   - Paragraphs
   - Documents
@@ -7477,9 +7467,7 @@ spider_473:
   question: What are first names of all players, and their total ranking points? Display
     id, first name and total ranking points. Group by player_id and first_name. Sort
     by player_id
-  golden_query: SELECT  T1.player_id, T1.first_name,sum(ranking_points) as total_ranking_points  FROM
-    spider_dev.wta_1.players AS T1 JOIN spider_dev.wta_1.rankings AS T2 ON T1.player_id  =  T2.player_id
-    GROUP BY T1.player_id, T1.first_name order by T1.player_id
+  golden_query: SELECT p.player_id, first_name, SUM(ranking_points) AS total_ranking_points FROM spider_dev.wta_1.players AS p LEFT JOIN spider_dev.wta_1.rankings AS r ON p.player_id = r.player_id GROUP BY p.player_id, first_name ORDER BY p.player_id
   tables:
   - players
   - rankings
@@ -9051,29 +9039,31 @@ spider_569:
   - student_transcripts_tracking
 spider_570:
   query_name: spider_570
-  question: What is the last transcript release date?
-  golden_query: SELECT transcript_date FROM spider_dev.student_transcripts_tracking.Transcripts
+  question: What is the last transcript release date? Display as transcript_date, transcript_date_converted.
+  golden_query: SELECT transcript_date, TRY_TO_TIMESTAMP(transcript_date) AS transcript_date_converted FROM spider_dev.student_transcripts_tracking.Transcripts  
     ORDER BY transcript_date DESC LIMIT 1
   tables:
   - Transcripts
   comparison_rules:
   - columns:
     - transcript_date
-    match: exact
+    - transcript_date_converted
+    match: oneof
   auto_select_schema: 'false'
   schemas:
   - student_transcripts_tracking
 spider_571:
   query_name: spider_571
-  question: When was the last transcript released?
-  golden_query: SELECT transcript_date FROM spider_dev.student_transcripts_tracking.Transcripts
+  question: When was the last transcript released? Display as transcript_date, last_transcript_date.
+  golden_query: SELECT transcript_date, TRY_TO_TIMESTAMP(transcript_date) AS last_transcript_date FROM spider_dev.student_transcripts_tracking.Transcripts 
     ORDER BY transcript_date DESC LIMIT 1
   tables:
   - Transcripts
   comparison_rules:
   - columns:
     - transcript_date
-    match: exact
+    - last_transcript_date
+    match: oneof
   auto_select_schema: 'false'
   schemas:
   - student_transcripts_tracking
@@ -10909,15 +10899,15 @@ spider_691:
   - voter_1
 spider_692:
   query_name: spider_692
-  question: What is last date created of votes from the state 'CA'? Display as last_date_created.
-  golden_query: SELECT max(created) as last_date_created FROM spider_dev.voter_1.votes
-    WHERE state  =  'CA'
+  question: What is last date created of votes from the state 'CA'? Display as last_date_created, last_date_created_timestamp.
+  golden_query: SELECT max(created) as last_date_created, MAX(TRY_TO_TIMESTAMP(created)) AS last_date_created_timestamp FROM spider_dev.voter_1.votes WHERE state  =  'CA'
   tables:
   - votes
   comparison_rules:
   - columns:
     - last_date_created
-    match: exact
+    - last_date_created_timestamp
+    match: oneof
   auto_select_schema: 'false'
   schemas:
   - voter_1
@@ -15252,7 +15242,7 @@ spider_960:
   - dog_kennels
 spider_961:
   query_name: spider_961
-  question: List the last name of the owner owning the youngest dog.
+  question: List the last name of the owner owning the youngest dog. Use age instead of date_of_birth.
   golden_query: SELECT T1.last_name FROM spider_dev.dog_kennels.Owners AS T1 JOIN
     spider_dev.dog_kennels.Dogs AS T2 ON T1.owner_id  =  T2.owner_id WHERE T2.age  =  (
     SELECT min(age) FROM spider_dev.dog_kennels.Dogs )
