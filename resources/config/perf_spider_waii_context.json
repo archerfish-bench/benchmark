@@ -177,5 +177,11 @@
     "statement": "major_record_format should be with exact comparison. Do not change string for comparison. Do not use LIKE , ILIKE",
     "scope": "SPIDER_DEV.orchestra",
     "labels": null
+  },
+  {
+    "id": "694b2771-8a8f-4e0e-ad7f-81f038ce5c2d",
+    "statement": "Use abandoned_yn only when explicitly asked",
+    "scope": "SPIDER_DEV.dog_kennels.dogs",
+    "labels": []
   }
 ]
