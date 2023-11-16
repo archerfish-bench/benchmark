@@ -1743,7 +1743,7 @@ spider_106:
 spider_107:
   query_name: spider_107
   question: What is the name of each continent and how many car makers are there in
-    each one? Display as num_makers.
+    each one? Display as continent_name, num_makers."
   golden_query: SELECT cont.continent AS continent_name, COUNT(DISTINCT id) AS num_makers FROM spider_dev.car_1.continents AS cont LEFT JOIN spider_dev.car_1.countries AS cn ON contid = cn.continent LEFT JOIN spider_dev.car_1.car_makers AS cm ON countryid = country GROUP BY cont.continent ORDER BY num_makers DESC
   tables:
   - COUNTRIES
@@ -1751,7 +1751,7 @@ spider_107:
   - car_makers
   comparison_rules:
   - columns:
-    - Continent
+    - continent_name
     - num_makers
     match: exact
   auto_select_schema: 'false'
