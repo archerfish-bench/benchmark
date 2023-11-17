@@ -8,7 +8,7 @@ from logging.handlers import RotatingFileHandler
 import yaml
 
 from gen_report.report_generator import generate_report
-from utils.utils import exclude_filter
+from utils.utils import exclude_filter, filter_schema
 from utils.utils import include_filter
 
 
@@ -22,7 +22,8 @@ class Driver:
     """
 
     def __init__(self, benchmark_config: str, benchmark_name: str, workload_config: str, queries: str,
-                 exclude_queries: str, run_id: str, filter_schema: str, halt_on_error: bool, report_format='html'):
+                 exclude_queries: str, run_id: str, schema_filter: str, halt_on_error: bool,
+                 report_format='html', intent_based_match=True):
         self._setup_logger()
         self.benchmark_config = benchmark_config
         self.benchmark_name = benchmark_name
@@ -33,6 +34,7 @@ class Driver:
         self.filter_schema = filter_schema
         self.halt_on_error = halt_on_error
         self.report_format = report_format
+        self.intent_based_match = intent_based_match
         try:
             with open(self.benchmark_config, 'r') as f:
                 self.benchmark_config_data = yaml.safe_load(f)
@@ -43,10 +45,13 @@ class Driver:
                 # dictionary
                 self.workload_data = data
 
+                if schema_filter:
+                    self.workload_data = filter_schema(self.workload_data.values(), schema_filter)
+
                 if queries and queries != "*":
                     self.workload_data = include_filter(self.workload_data.values(), queries.split(","))
                 if exclude_queries:
-                    self.workload_data = exclude_filter(self.workload_data, exclude_queries.split(","))
+                    self.workload_data = exclude_filter(self.workload_data.values(), exclude_queries.split(","))
 
                 logging.info(f"Workload len: {len(self.workload_data)}")
 
@@ -99,7 +104,9 @@ class Driver:
             module_name, class_name = class_name.rsplit('.', 1)
             module = __import__(module_name, fromlist=[class_name])
             class_obj = getattr(module, class_name)
-            benchmark = class_obj(workload_data=self.workload_data, halt_on_error=self.halt_on_error)
+            benchmark = class_obj(workload_data=self.workload_data,
+                                  halt_on_error=self.halt_on_error,
+                                  intent_based_match=self.intent_based_match)
             print(f"Successfully instantiated the class {class_name}")
         except Exception as e:
             logging.error(f"Failed to instantiate class '{class_name}': {str(e)}")
@@ -148,12 +155,14 @@ def parse_arguments():
     parser.add_argument('--run_id', type=str,
                         help='Provide run id for this execution', required=False,
                         default=time.time())
-    parser.add_argument('--filter_schema', type=str,
-                        help='Only run queries which are targetted for a specific schema',
+    parser.add_argument('--schema_filter', type=str,
+                        help='Only run queries which are targeted for a specific schema',
                         required=False, default='')
     parser.add_argument('--report_format', type=str,
                         help='report format. Default is html. You can implement your own report format',
                         required=False, default='html')
+    parser.add_argument('--disable_intent_based_match', action='store_false', dest='intent_based_match',
+                        help='Disable intent based match')
 
     return parser.parse_args()
 
@@ -167,8 +176,9 @@ if __name__ == '__main__':
                     queries=args.queries,
                     exclude_queries=args.exclude_queries,
                     run_id=args.run_id,
-                    filter_schema=args.filter_schema,
+                    schema_filter=args.schema_filter,
                     halt_on_error=args.halt_on_error,
-                    report_format=args.report_format
+                    report_format=args.report_format,
+                    intent_based_match=args.intent_based_match
                     )
     driver.run()

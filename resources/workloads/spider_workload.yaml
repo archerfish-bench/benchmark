@@ -3671,7 +3671,7 @@ spider_228:
   - flights
   comparison_rules:
   - columns:
-    - AirportCode
+    - "*"
     match: exact
   auto_select_schema: 'false'
   schemas:
@@ -6877,16 +6877,14 @@ spider_435:
   - wta_1
 spider_436:
   query_name: spider_436
-  question: Find the average age of losers and winners of all matches. Display as
-    avg_loser, avg_win
+  question: Find the average age of losers and winners of all matches.
   golden_query: SELECT avg(loser_age) as avg_loser,  avg(winner_age) as avg_win FROM
     spider_dev.wta_1.matches
   tables:
   - matches
   comparison_rules:
   - columns:
-    - avg_loser
-    - avg_win
+    - "*"
     match: exact
   auto_select_schema: 'false'
   schemas:
@@ -6901,8 +6899,7 @@ spider_437:
   - matches
   comparison_rules:
   - columns:
-    - avg_loser_age
-    - avg_winner_age
+      - "*"
     match: exact
   auto_select_schema: 'false'
   schemas:

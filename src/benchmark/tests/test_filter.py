@@ -3,15 +3,16 @@ import unittest
 # TODO: Check if this is fine.
 from ..utils.utils import include_filter
 from ..utils.utils import exclude_filter
+from ..utils.utils import filter_schema
 
 
 class TestFilterDataByQueryInfo(unittest.TestCase):
 
     def setUp(self):
         self.data = [
-            {'query_name': 'info1', 'other_field': 'value1'},
-            {'query_name': 'info2', 'other_field': 'value2'},
-            {'query_name': 'info3', 'other_field': 'value3'}
+            {'query_name': 'info1', 'other_field': 'value1', 'schemas': ['schema1']},
+            {'query_name': 'info2', 'other_field': 'value2', 'schemas': ['schema11']},
+            {'query_name': 'info3', 'other_field': 'value3', 'schemas': ['schema111']},
         ]
 
     def test_include_filter_single_value(self):
@@ -44,6 +45,12 @@ class TestFilterDataByQueryInfo(unittest.TestCase):
         result = exclude_filter(self.data, ['info4'])
         self.assertEqual(len(result), 3)
 
+    def test_filter_schema(self):
+        result = filter_schema(self.data, 'schema1')
+        self.assertEqual(len(result), 1)
+
+        result = filter_schema(self.data, 'schema2')
+        self.assertEqual(len(result), 0)
 
 if __name__ == "__main__":
     unittest.main()

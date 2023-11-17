@@ -143,14 +143,17 @@ You need help to fix it, there're some issues:
 
 Output (only produce Python program):
 """
+import decimal
 import json
 import logging
 from typing import Optional
 
 
-
-def compare_results(expected, actual, comparison_rules,
-                    source_db_type: Optional[str] = None, target_db_type: Optional[str] = None):
+def compare_results(expected, actual, comparison_rules, intent_based_match: bool = True,
+                    source_db_type: Optional[str] = None,
+                    target_db_type: Optional[str] = None):
+    if not intent_based_match:
+        return compare_exact_match(expected, actual)
     # make a copy of expected
     expected = expected.copy()
     # make a copy of actual
@@ -224,8 +227,6 @@ def compare_results(expected, actual, comparison_rules,
         else:
             logging.info("Expected and actual columns are different, skipping de-duplication in results")
 
-    expected = remove_duplicates(expected)
-    actual = remove_duplicates(actual)
 
     if len(expected) != len(actual):
         if target_db_type is not None and target_db_type == "mongo" and len(expected) < len(actual):
@@ -255,6 +256,12 @@ def compare_results(expected, actual, comparison_rules,
                             matched = True
                             del actual_row[key]
                             break
+                    elif isinstance(expected_value, (int, float, decimal.Decimal)) and isinstance(actual_row[key], (int, float, decimal.Decimal)):
+                        if actual_row[key] is not None and (
+                                str(round(expected_value, 1)) == str(round(actual_row[key], 1))):
+                            matched = True
+                            del actual_row[key]
+                            break
                     elif isinstance(expected_value, str) and isinstance(actual_row[key], str):
                         if expected_value == actual_row[key]:
                             matched = True
@@ -276,6 +283,12 @@ def compare_results(expected, actual, comparison_rules,
                             matched = True
                             del actual_row[key]
                             break
+                    else:
+                        # convert both to string and compare
+                        if str(expected_row[column]) == str(actual_row[key]):
+                            matched = True
+                            del actual_row[key]
+                            break
                 if not matched:
                     return False
             return True
@@ -290,7 +303,12 @@ def compare_results(expected, actual, comparison_rules,
                     if expected_value is None:
                         if actual_row[key] is None:
                             return True
+                            break
+                    elif isinstance(expected_value, (int, float, decimal.Decimal)) and isinstance(actual_row[key], (int, float, decimal.Decimal)):
+                        if actual_row[key] is not None and (
+                                str(round(expected_value, 1)) == str(round(actual_row[key], 1))):
                             del actual_row[key]
+                            return True
                             break
                     elif isinstance(expected_value, str) and isinstance(actual_row[key], str):
                         if expected_value == actual_row[key]:
@@ -299,7 +317,13 @@ def compare_results(expected, actual, comparison_rules,
                             break
                     elif isinstance(expected_value, (int, float)) and isinstance(actual_row[key], (int, float)):
                         if actual_row[key] is not None and (
-                                round(expected_value, 0) == round(actual_row[key], 0)):
+                                str(round(expected_value, 0)) == str(round(actual_row[key], 0))):
+                            del actual_row[key]
+                            return True
+                            break
+                    else:
+                        # convert both to string and compare
+                        if str(expected_row[column]) == str(actual_row[key]):
                             del actual_row[key]
                             return True
                             break
@@ -320,4 +344,18 @@ def compare_results(expected, actual, comparison_rules,
                 break
         if not matched:
             return False, f"Comparison failed for row: exp={expected_row}, act={actual_row}"
+    return True, ""
+
+
+def compare_exact_match(expected, actual):
+    """
+    Compare the expected and actual results exactly.
+    """
+    if len(expected) != len(actual):
+        return False, f"Number of rows are different, #exp={len(expected)}, #act={len(actual)}"
+
+    for expected_row, actual_row in zip(expected, actual):
+        if expected_row != actual_row:
+            return False, f"Comparison failed for row: exp={expected_row}, act={actual_row}"
+
     return True, ""

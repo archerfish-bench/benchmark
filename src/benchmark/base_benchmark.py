@@ -11,10 +11,11 @@ import sqlalchemy as sa
 from sqlalchemy import inspect
 from tqdm import tqdm
 
-from utils.result_set_match import compare_results
+from utils.result_set_match import compare_results, compare_exact_match
 from constants import *
 from database_connectors import DatabaseConnector, DatabaseType
 from database_connectors import create_connector
+
 
 class InlineExecutor:
     def __enter__(self):
@@ -37,6 +38,7 @@ class InlineExecutor:
 
     def shutdown(self, wait=True):
         pass
+
 
 from concurrent.futures import Future
 
@@ -66,6 +68,9 @@ class TaskResult:
         self.generated_query_runtime = -1
         self.golden_query_runtime = -1
         self.query_id = None
+        self.is_gen_query_same_as_golden_query = False
+        self.is_exact_match_result_comparison_fine = False
+        self.exact_match_result_comparison_error = None
 
     # def __bool__(self):
     #     return self.results_comparison_error is None
@@ -83,11 +88,12 @@ class TaskResult:
 
 
 class BenchmarkBase:
-    def __init__(self, workload_data: dict, halt_on_error=False,
+    def __init__(self, workload_data: dict, halt_on_error=False, intent_based_match=True,
                  source_db_connector: Optional[DatabaseConnector] = None,
                  target_db_connector: Optional[DatabaseConnector] = None):
         self.data = workload_data
         self.halt_on_error = halt_on_error
+        self.intent_based_match = intent_based_match
         self.benchmark_config = None
 
         # Database connectors
@@ -97,6 +103,9 @@ class BenchmarkBase:
         self.task_results = []
         self.use_threading = True
         self.threads_count = 5
+        logging.info(f"Starting benchmark with {self.threads_count} threads, "
+                     f"intent_based_match: {intent_based_match} "
+                     f"halt_on_error: {halt_on_error}")
 
     @abstractmethod
     def setup(self, benchmark_config: dict):
@@ -189,6 +198,8 @@ class BenchmarkBase:
         task_result = self.generate_query(query_info=query_info)
         tables = query_info.get(TABLES, None)
         task_result.golden_query_tables = tables
+        if str(task_result.generated_query).strip() == str(query_info[GOLDEN_QUERY]).strip():
+            task_result.gen_query_same_as_golden_query = True
 
         if task_result.is_query_generated:
             gen_query_result = None
@@ -257,9 +268,20 @@ class BenchmarkBase:
         Compares the results of the generated and golden queries.
         """
         # compare runtime results of golden query and generated query
+        source_db_type = self.source_db_connector.get_db_type()
+        target_db_type = self.target_db_connector.get_db_type()
+
+        # For regular comparison
         (task_result.is_results_comparison_fine,
-         task_result.results_comparison_error) = self._compare_results(query_info, gen_query_result,
-                                                                      golden_query_result)
+         task_result.results_comparison_error) = compare_results(gen_query_result, golden_query_result,
+                                        query_info.get('comparison_rules'),
+                                        intent_based_match=self.intent_based_match,
+                                        source_db_type=source_db_type,
+                                        target_db_type=target_db_type)
+
+        # For exact match comparison and additional information purposes.
+        (task_result.is_exact_match_result_comparison_fine,
+         task_result.exact_match_result_comparison_error) = compare_exact_match(gen_query_result, golden_query_result)
 
     def log_results(self, task_result: TaskResult, query_info: dict):
         """
@@ -276,21 +298,6 @@ class BenchmarkBase:
         """
         task_result.is_results_comparison_fine = False
         raise TaskFailure(message=message, query_info=query_info)
-
-    def _compare_results(self, query_info, expected_result, golden_result):
-        """
-        Compare the results of the query with the golden result.
-        args:
-            expected_result: result of the query
-            golden_result: result of the golden query
-        """
-        source_db_type = self.source_db_connector.get_db_type()
-        target_db_type = self.target_db_connector.get_db_type()
-        result, error = compare_results(expected_result, golden_result,
-                                        query_info.get('comparison_rules'),
-                                        source_db_type=source_db_type,
-                                        target_db_type=target_db_type)
-        return result, error
 
     @abstractmethod
     def generate_query(self, query_info: dict) -> TaskResult:
