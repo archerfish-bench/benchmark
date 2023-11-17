@@ -10,6 +10,7 @@ WORKLOAD_CONFIG="$PROJ_HOME/resources/workloads/spider_workload.yaml"
 TEST_SUITE="perf_spider"
 RUN_ID="perf_spider_run"
 QUERIES_FLAG=""
+INTENT_BASED_MATCH_FLAG=""
 
 # Function to display script usage details
 display_help() {
@@ -47,6 +48,10 @@ while (( "$#" )); do
     -i|--run_id)
       RUN_ID="$2"
       shift 2
+      ;;
+    -d|--disable-intent-based-match)
+      INTENT_BASED_MATCH_FLAG="--disable_intent_based_match"
+      shift
       ;;
     -h|--help)
       display_help
@@ -96,6 +101,7 @@ python "$PROJ_HOME/src/benchmark/driver.py" \
   --benchmark_name "$BENCHMARK_NAME" \
   --workload_config "$WORKLOAD_CONFIG" \
   $QUERIES_FLAG \
+  $INTENT_BASED_MATCH_FLAG \
   --run_id "$RUN_ID"
 
 echo "Done!"

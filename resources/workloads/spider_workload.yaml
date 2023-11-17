@@ -13146,9 +13146,7 @@ spider_833:
   query_name: spider_833
   question: What are the maximum and minimum share of performances whose type is not
     'Live final'. Display as min_share, max_share.
-  golden_query:
-  - SELECT min(SHARE) as min_share ,  max(SHARE) as max_share FROM spider_dev.orchestra.performance
-    WHERE TYPE != 'Live final'
+  golden_query: SELECT min(SHARE) as min_share ,  max(SHARE) as max_share FROM spider_dev.orchestra.performance WHERE TYPE != 'Live final'
   tables:
     - performance
   comparison_rules:
@@ -13163,9 +13161,7 @@ spider_834:
   query_name: spider_834
   question: Return the maximum and minimum shares for performances that do not have
     the type 'Live final'. Display as min_share, max_share.
-  golden_query:
-  - SELECT min(SHARE) as min_share ,  max(SHARE) as max_share FROM spider_dev.orchestra.performance
-    WHERE TYPE != 'Live final'
+  golden_query: SELECT min(SHARE) as min_share ,  max(SHARE) as max_share FROM spider_dev.orchestra.performance WHERE TYPE != 'Live final'
   tables:
     - performance
   comparison_rules:
