@@ -73,7 +73,7 @@
                 <th>Generated Query</th>
                 <th>Golden Query</th>
                 <th>Tweaks</th>
-                <th>Is Results Comparison Fine</th>
+                <th>Is Results Comparison Fine (intent_based)</th>
                 <th>Results Comparison Error</th>
                 <th>Generation Time</th>
                 <th>Generated Query Runtime</th>
@@ -82,6 +82,9 @@
                 <th>Generated Query Tables</th>
                 <th>Table Check</th>
                 <th>Query ID</th>
+                <th>Is_Gen_Query_Same_As_Golden_Query</th>
+                <th>Is exact match comparison fine</th>
+                <th>Exact match result comparison error</th>
             </tr>
         </thead>
         <tbody>
@@ -102,6 +105,9 @@
                     <td>{{ result.generated_query_tables }}</td>
                     <td>{{ result.table_check }}</td>
                     <td>{{ result.query_id }}</td>
+                    <td>{{ result.is_gen_query_same_as_golden_query }}</td>
+                    <td>{{ result.is_exact_match_result_comparison_fine }}</td>
+                    <td>{{ result.exact_match_result_comparison_error }}</td>
                 </tr>
             {% endfor %}
         </tbody>
