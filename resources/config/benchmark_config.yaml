@@ -24,3 +24,19 @@ implementations:
     class: llama_index_benchmark.LlamaIndexBenchmark
     description: Llama index sample benchmark implementation using their LLM.
     db_connection: 'sqlite:///<provide_entire_path_here>/world_1.sqlite'
+
+
+  # Each benchmark can have its relevant configurations defined here.
+  - name: SQLFromPromptBenchmark
+    class: sql_from_prompt_benchmark.SQLFromPromptBenchmark
+    description: Using openAI prompt for generating text-to-sql using openai GPT-4.
+    threads_count: 3
+    databases:
+      source:
+        # Golden query runs in source DB
+        type: sqlalchemy
+        connection: 'snowflake://<username>:<password>@<account>/<database>?role=<ROLE>&warehouse=<compute>'
+      target:
+        # Generated query runs in target DB
+        # When target DB is same as source, we can use the same connection. Otherwise, provide type and connection string
+        same_as_source: true
