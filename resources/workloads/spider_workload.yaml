@@ -2982,7 +2982,7 @@ spider_182:
   - flight_2
 spider_183:
   query_name: spider_183
-  question: Which abbreviation corresponds to 'Jetblue Airways'?
+  question: Which abbreviation corresponds to 'JetBlue Airways'?
   golden_query: SELECT Abbreviation FROM spider_dev.flight_2.AIRLINES WHERE Airline  =  'Jetblue
     Airways'
   tables:
