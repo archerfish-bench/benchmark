@@ -183,5 +183,17 @@
     "statement": "Use abandoned_yn only when explicitly asked",
     "scope": "SPIDER_DEV.dog_kennels.dogs",
     "labels": []
+  },
+  {
+    "id": "694b2772-8a8f-4e0e-ad7f-81f038ce5c2d",
+    "statement": "share in performance contains % as string format. Do not try to convert to number",
+    "scope": "SPIDER_DEV.orchestra.performance",
+    "labels": []
+  },
+  {
+    "id": "694b2773-8a8f-4e0e-ad7f-81f038ce5c2d",
+    "statement": "type should be with exact comparison. Do not change string for comparison. Do not use LIKE , ILIKE",
+    "scope": "SPIDER_DEV.orchestra.performance",
+    "labels": []
   }
 ]
