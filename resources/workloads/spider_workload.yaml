@@ -9232,7 +9232,7 @@ spider_581:
   - student_transcripts_tracking
 spider_582:
   query_name: spider_582
-  question: Describe the section h.
+  question: Describe the section with name 'h'.
   golden_query: SELECT section_description FROM spider_dev.student_transcripts_tracking.Sections
     WHERE section_name  =  'h'
   tables:
