@@ -195,5 +195,11 @@
     "statement": "type should be with exact comparison. Do not change string for comparison. Do not use LIKE , ILIKE",
     "scope": "SPIDER_DEV.orchestra.performance",
     "labels": []
+  },
+  {
+    "id": "694b2773-8a9f-4e0e-ad7f-81f038ce5c2d",
+    "statement": "airportname should be with exact comparison. Do not use LIKE , ILIKE",
+    "scope": "SPIDER_DEV.FLIGHT_2.airports",
+    "labels": []
   }
 ]
