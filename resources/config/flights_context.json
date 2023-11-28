@@ -1,0 +1,16 @@
+[
+  {
+    "id": "81d2bbf5-00f0-4357-9eda-880abcc6e27b",
+    "statement": "average delay should be considered for all entries. Not just for delays which are greater than 0.",
+    "labels": null,
+    "scope": "flights.flightperformance",
+    "always_include": true
+  },
+  {
+    "id": "81d3bbf5-00f0-4357-9eda-880abcc6e27b",
+    "statement": "Compute the arrival flights and departure flights to know actual traffic and busiest airport",
+    "labels": null,
+    "scope": "flights.flightperformance",
+    "always_include": true
+  }
+]

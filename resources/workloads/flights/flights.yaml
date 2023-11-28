@@ -1,0 +1,101 @@
+flights_1:
+  query_name: flights_1
+  question: What are the average delays for various reasons like carrier, weather, NAS, security, lateaircraft? Display as delaytype and avgdelay.
+  golden_query: SELECT 'Carrier' AS delaytype, AVG(carrierdelay) AS avgdelay FROM tweakit_perf_db.flights.flightperformance AS fp UNION ALL SELECT 'Weather' AS delaytype, AVG(weatherdelay) AS avgdelay FROM tweakit_perf_db.flights.flightperformance AS fp UNION ALL SELECT 'NAS' AS delaytype, AVG(nasdelay) AS avgdelay FROM tweakit_perf_db.flights.flightperformance AS fp UNION ALL SELECT 'Security' AS delaytype, AVG(securitydelay) AS avgdelay FROM tweakit_perf_db.flights.flightperformance AS fp UNION ALL ( SELECT 'LateAircraft' AS delaytype, AVG(lateaircraftdelay) AS avgdelay FROM tweakit_perf_db.flights.flightperformance AS fp )
+  comparison_rules:
+  - columns:
+    - delaytype
+    - avgdelay
+    match: oneof
+  auto_select_schema: 'false'
+  schemas:
+  - flights
+flights_2:
+  query_name: flights_2
+  question: what is the trend for the number of delayed flights on arrival by year? Display as year and num_delayed_flights.
+  golden_query: SELECT     year,     COUNT(*) AS num_delayed_flights FROM tweakit_perf_db.flights.flightperformance AS fp WHERE     arrdelay > 0 GROUP BY     year ORDER BY     year
+  comparison_rules:
+  - columns:
+    - year
+    - num_delayed_flights
+    match: exact
+  auto_select_schema: 'false'
+  schemas:
+  - flights
+flights_3:
+  query_name: flights_3
+  question: Do older planes suffer more arrival delays? Display unique plane_year and avg_delay_per_year.
+  golden_query: WITH planeage AS (     SELECT         tailnum,         year     FROM tweakit_perf_db.flights.planedata ),  avgdelay AS (     SELECT         tailnum,         AVG(arrdelay) AS average_delay     FROM tweakit_perf_db.flights.flightperformance     GROUP BY         tailnum )  SELECT     year AS plane_year,     AVG(average_delay) AS avg_delay_per_year FROM planeage AS pa INNER JOIN avgdelay AS ad     ON pa.tailnum = ad.tailnum GROUP BY     year ORDER BY     year
+  comparison_rules:
+  - columns:
+    - plane_year
+    - avg_delay_per_year
+    match: exact
+  auto_select_schema: 'false'
+  schemas:
+  - flights
+flights_4:
+  query_name: flights_4
+  question: How does the number of people flying between different locations change over time? Sort by year, month, origin, destination. Display as origin, origin_city, dest, destination_city, year, month, num_flights. Show 100 rows.
+  golden_query: WITH flightcounts AS (SELECT origin,dest,year,month,COUNT(*) AS num_flights FROM tweakit_perf_db.flights.flightperformance AS fp GROUP BY origin,dest,year,month) SELECT origin,o.city AS origin_city,dest,d.city AS destination_city,year,month,num_flights FROM flightcounts AS fc INNER JOIN tweakit_perf_db.flights.airports AS o ON origin = o.iata INNER JOIN tweakit_perf_db.flights.airports AS d ON dest = d.iata ORDER BY year,month,origin,dest limit 100;
+  comparison_rules:
+  - columns:
+    - origin
+    - origin_city
+    - dest
+    - destination_city
+    - year
+    - month
+    - num_flights
+    match: exact
+  auto_select_schema: 'false'
+  schemas:
+  - flights
+flights_5:
+  query_name: flights_5
+  question: Show me the flight delays by carrier and month. Display as carrier, description, month, average_delay Show 100 rows.
+  golden_query: WITH carrierdelays AS (     SELECT         uniquecarrier,         month,         AVG(arrdelay) AS average_delay     FROM tweakit_perf_db.flights.flightperformance AS fp     GROUP BY         uniquecarrier,         month )  SELECT     uniquecarrier as carrier,     description,     month,     average_delay FROM carrierdelays AS cd INNER JOIN tweakit_perf_db.flights.carriers AS c     ON uniquecarrier = code ORDER BY     uniquecarrier,     month limit 100
+  comparison_rules:
+  - columns:
+    - description
+    - month
+    - average_delay
+    match: exact
+  auto_select_schema: 'false'
+  schemas:
+  - flights
+flights_6:
+  query_name: flights_6
+  question: Top 5 busiest airports by flight count. Display as airport, total_flights.
+  golden_query: WITH TOTAL_FLIGHTS AS (SELECT ORIGIN AS AIRPORT, COUNT(*) AS C FROM FLIGHTPERFORMANCE GROUP BY ORIGIN UNION ALL SELECT DEST AS AIRPORT, COUNT(*) AS C FROM FLIGHTPERFORMANCE GROUP BY DEST) SELECT AIRPORT as AIRPORT, SUM(C) AS TOTAL_FLIGHTS FROM TOTAL_FLIGHTS GROUP BY AIRPORT ORDER BY TOTAL_FLIGHTS DESC LIMIT 5;
+  comparison_rules:
+  - columns:
+    - airport
+    - total_flights
+    match: oneof
+  auto_select_schema: 'false'
+  schemas:
+  - flights
+flights_7:
+  query_name: flights_7
+  question: What are the aircraft types that are most prone to delays (e.g arrival delay, departure delay, carrier delay, weather delay, nasdelay, security delay, carrier delay)? Display as type. Display top 1 row.
+  golden_query: select p.aircraft_type as type, sum(arrdelay + depdelay + carrierdelay + weatherdelay + nasdelay + securitydelay + lateaircraftdelay) as total_delay from flightperformance as fp  inner join planedata as p on p.tailnum = fp.tailnum group by p.aircraft_type order by total_delay desc limit 1
+  comparison_rules:
+  - columns:
+    - '*'
+    match: exact
+  auto_select_schema: 'false'
+  schemas:
+  - flights
+flights_8:
+  query_name: flights_8
+  question: What are the most common destination states for each carrier? Display as carrier, state. Sort by carrier. Show 100 rows.
+  golden_query: WITH CARRIERDESTINATIONS AS (SELECT DESCRIPTION AS CARRIER, STATE, COUNT(*) AS FLIGHTS_COUNT FROM TWEAKIT_PERF_DB.FLIGHTS.FLIGHTPERFORMANCE AS FP INNER JOIN TWEAKIT_PERF_DB.FLIGHTS.CARRIERS AS C ON UNIQUECARRIER = CODE INNER JOIN TWEAKIT_PERF_DB.FLIGHTS.AIRPORTS AS A ON DEST = IATA GROUP BY DESCRIPTION, STATE), RANKEDSTATES AS (SELECT CARRIER, STATE, FLIGHTS_COUNT, RANK() OVER (PARTITION BY CARRIER ORDER BY FLIGHTS_COUNT DESC) AS RANK FROM CARRIERDESTINATIONS) SELECT CARRIER, STATE FROM RANKEDSTATES WHERE RANK = 1 ORDER BY CARRIER;
+  comparison_rules:
+  - columns:
+    - carrier
+    - state
+    match: exact
+  auto_select_schema: 'false'
+  schemas:
+  - flights

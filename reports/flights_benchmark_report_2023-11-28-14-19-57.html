@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Task Results Report</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
+    <style>
+        body {
+            font-family: 'Verdana', sans-serif;
+        }
+
+        #taskResultsTable,
+        #taskResultsTable th,
+        #taskResultsTable td {
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Style for alternate rows */
+        #taskResultsTable tbody tr:nth-child(even) {
+            background-color: #f7fafc; /* A mild and pleasant color for alternate rows */
+        }
+
+        /* Style for rows with False in is_results_comparison_fine */
+        .row-highlight {
+            color: red;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            var table = $('#taskResultsTable').DataTable();
+
+            // Setup column-specific search inputs
+            $('#taskResultsTable thead').append('<tr>');
+            $('#taskResultsTable thead th').each(function (i) {
+                var title = $(this).text();
+                $('#taskResultsTable thead tr:eq(1)').append('<th><input type="text" placeholder="Search ' + title + '" /></th>');
+
+                $('#taskResultsTable thead tr:eq(1) th:eq(' + i + ') input').on('keyup change', function () {
+                    if (table.column(i).search() !== this.value) {
+                        table
+                            .column(i)
+                            .search(this.value)
+                            .draw();
+                    }
+                    updateRowCount(table);
+                });
+            });
+
+            // Function to update row count based on filtering
+            function updateRowCount(table) {
+                $('#rowCount').text("Matched rows: " + table.rows({ search: 'applied' }).count());
+                $('#totalRowCount').text("Total rows: " + table.rows().count());
+            }
+
+            updateRowCount(table);
+        });
+    </script>
+</head>
+
+<body>
+    <h1>Task Results Report</h1>
+    <div id="rowCount">Matched rows: 0</div>
+    <div id="totalRowCount">Total rows: 0</div>
+    <div></br></div>
+    <table id="taskResultsTable" class="display">
+        <thead>
+            <tr>
+                <th>Query Name</th>
+                <th>Question</th>
+                <th>Is Query Generated</th>
+                <th>Generated Query</th>
+                <th>Golden Query</th>
+                <th>Tweaks</th>
+                <th>Is Results Comparison Fine (intent_based)</th>
+                <th>Results Comparison Error</th>
+                <th>Generation Time</th>
+                <th>Generated Query Runtime</th>
+                <th>Golden Query Runtime</th>
+                <th>Golden Query Tables</th>
+                <th>Generated Query Tables</th>
+                <th>Table Check</th>
+                <th>Query ID</th>
+                <th>Is_Gen_Query_Same_As_Golden_Query</th>
+                <th>Is exact match comparison fine</th>
+                <th>Exact match result comparison error</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+                <tr >
+                    <td>flights_1</td>
+                    <td>What are the average delays for various reasons like carrier, weather, NAS, security, lateaircraft? Display as delaytype and avgdelay.</td>
+                    <td>True</td>
+                    <td>SELECT
+    delaytype,
+    AVG(avgdelay) AS avgdelay
+FROM (
+    SELECT
+        'carrier' AS delaytype,
+        carrierdelay AS avgdelay
+    FROM tweakit_perf_db.flights.flightperformance
+    UNION ALL
+    SELECT
+        'weather' AS weather,
+        weatherdelay AS weatherdelay
+    FROM tweakit_perf_db.flights.flightperformance
+    UNION ALL
+    SELECT
+        'NAS' AS nas,
+        nasdelay AS nasdelay
+    FROM tweakit_perf_db.flights.flightperformance
+    UNION ALL
+    SELECT
+        'security' AS security,
+        securitydelay AS securitydelay
+    FROM tweakit_perf_db.flights.flightperformance
+    UNION ALL
+    SELECT
+        'lateaircraft',
+        lateaircraftdelay
+    FROM tweakit_perf_db.flights.flightperformance
+)
+GROUP BY
+    delaytype
+</td>
+                    <td>SELECT 'Carrier' AS delaytype, AVG(carrierdelay) AS avgdelay FROM tweakit_perf_db.flights.flightperformance AS fp UNION ALL SELECT 'Weather' AS delaytype, AVG(weatherdelay) AS avgdelay FROM tweakit_perf_db.flights.flightperformance AS fp UNION ALL SELECT 'NAS' AS delaytype, AVG(nasdelay) AS avgdelay FROM tweakit_perf_db.flights.flightperformance AS fp UNION ALL SELECT 'Security' AS delaytype, AVG(securitydelay) AS avgdelay FROM tweakit_perf_db.flights.flightperformance AS fp UNION ALL ( SELECT 'LateAircraft' AS delaytype, AVG(lateaircraftdelay) AS avgdelay FROM tweakit_perf_db.flights.flightperformance AS fp )</td>
+                    <td>None</td>
+                    <td>True</td>
+                    <td>None</td>
+                    <td>18.58</td>
+                    <td>2.387</td>
+                    <td>0.2804</td>
+                    <td>None</td>
+                    <td>['FLIGHTPERFORMANCE']</td>
+                    <td>False</td>
+                    <td>e41fa5fd-4bd7-4635-825a-700f81d1a0f2</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>Comparison failed for row: exp={'delaytype': 'security', 'avgdelay': Decimal('0.026270')}, act={'delaytype': 'Carrier', 'avgdelay': Decimal('3.750597')}</td>
+                </tr>
+            
+                <tr >
+                    <td>flights_2</td>
+                    <td>what is the trend for the number of delayed flights on arrival by year? Display as year and num_delayed_flights.</td>
+                    <td>True</td>
+                    <td>SELECT
+    year,
+    COUNT(CASE WHEN arrdelay > 0 THEN 1 END) AS num_delayed_flights
+FROM tweakit_perf_db.flights.flightperformance AS fp
+GROUP BY
+    year
+ORDER BY
+    year
+</td>
+                    <td>SELECT     year,     COUNT(*) AS num_delayed_flights FROM tweakit_perf_db.flights.flightperformance AS fp WHERE     arrdelay > 0 GROUP BY     year ORDER BY     year</td>
+                    <td>None</td>
+                    <td>True</td>
+                    <td>None</td>
+                    <td>13.49</td>
+                    <td>0.2856</td>
+                    <td>0.2891</td>
+                    <td>None</td>
+                    <td>['FLIGHTPERFORMANCE']</td>
+                    <td>False</td>
+                    <td>931d8fb4-6021-4736-b284-3a5670c95abb</td>
+                    <td>False</td>
+                    <td>True</td>
+                    <td></td>
+                </tr>
+            
+                <tr >
+                    <td>flights_3</td>
+                    <td>Do older planes suffer more arrival delays? Display unique plane_year and avg_delay_per_year.</td>
+                    <td>True</td>
+                    <td>WITH planeyear AS (
+    SELECT DISTINCT
+        tailnum,
+        year
+    FROM tweakit_perf_db.flights.planedata
+),
+
+avgdelay AS (
+    SELECT
+        tailnum,
+        AVG(arrdelay) AS avg_delay
+    FROM tweakit_perf_db.flights.flightperformance
+    GROUP BY
+        tailnum
+)
+
+SELECT
+    year AS plane_year,
+    AVG(avg_delay) AS avg_delay_per_year
+FROM planeyear AS py
+INNER JOIN avgdelay AS ad
+    ON py.tailnum = ad.tailnum
+GROUP BY
+    year
+ORDER BY
+    year
+</td>
+                    <td>WITH planeage AS (     SELECT         tailnum,         year     FROM tweakit_perf_db.flights.planedata ),  avgdelay AS (     SELECT         tailnum,         AVG(arrdelay) AS average_delay     FROM tweakit_perf_db.flights.flightperformance     GROUP BY         tailnum )  SELECT     year AS plane_year,     AVG(average_delay) AS avg_delay_per_year FROM planeage AS pa INNER JOIN avgdelay AS ad     ON pa.tailnum = ad.tailnum GROUP BY     year ORDER BY     year</td>
+                    <td>None</td>
+                    <td>True</td>
+                    <td>None</td>
+                    <td>17.12</td>
+                    <td>0.2927</td>
+                    <td>0.2927</td>
+                    <td>None</td>
+                    <td>['FLIGHTPERFORMANCE', 'PLANEDATA']</td>
+                    <td>False</td>
+                    <td>f8a4a853-8b94-4c8c-9b20-585244cdb879</td>
+                    <td>False</td>
+                    <td>True</td>
+                    <td></td>
+                </tr>
+            
+                <tr >
+                    <td>flights_4</td>
+                    <td>How does the number of people flying between different locations change over time? Sort by year, month, origin, destination. Display as origin, origin_city, dest, destination_city, year, month, num_flights. Show 100 rows.</td>
+                    <td>True</td>
+                    <td>WITH flightcounts AS (
+    SELECT
+        year,
+        month,
+        origin,
+        dest,
+        COUNT(*) AS num_flights
+    FROM tweakit_perf_db.flights.flightperformance AS fp
+    GROUP BY
+        year,
+        month,
+        origin,
+        dest
+),
+
+origincities AS (
+    SELECT
+        iata,
+        city AS origin_city
+    FROM tweakit_perf_db.flights.airports AS a
+),
+
+destinationcities AS (
+    SELECT
+        iata,
+        city AS destination_city
+    FROM tweakit_perf_db.flights.airports AS a
+)
+
+SELECT
+    origin,
+    origin_city,
+    dest,
+    destination_city,
+    year,
+    month,
+    num_flights
+FROM flightcounts AS fc
+INNER JOIN origincities AS oc
+    ON origin = oc.iata
+INNER JOIN destinationcities AS dc
+    ON dest = dc.iata
+ORDER BY
+    year,
+    month,
+    origin,
+    dest
+LIMIT 100
+</td>
+                    <td>WITH flightcounts AS (SELECT origin,dest,year,month,COUNT(*) AS num_flights FROM tweakit_perf_db.flights.flightperformance AS fp GROUP BY origin,dest,year,month) SELECT origin,o.city AS origin_city,dest,d.city AS destination_city,year,month,num_flights FROM flightcounts AS fc INNER JOIN tweakit_perf_db.flights.airports AS o ON origin = o.iata INNER JOIN tweakit_perf_db.flights.airports AS d ON dest = d.iata ORDER BY year,month,origin,dest limit 100;</td>
+                    <td>None</td>
+                    <td>True</td>
+                    <td>None</td>
+                    <td>26.84</td>
+                    <td>0.3516</td>
+                    <td>0.2899</td>
+                    <td>None</td>
+                    <td>['AIRPORTS', 'FLIGHTPERFORMANCE']</td>
+                    <td>False</td>
+                    <td>b5aa68b9-2f92-464f-85a6-c4f36db743a7</td>
+                    <td>False</td>
+                    <td>True</td>
+                    <td></td>
+                </tr>
+            
+                <tr >
+                    <td>flights_5</td>
+                    <td>Show me the flight delays by carrier and month. Display as carrier, description, month, average_delay Show 100 rows.</td>
+                    <td>True</td>
+                    <td>WITH carrierdelays AS (
+    SELECT
+        uniquecarrier,
+        month,
+        AVG(arrdelay) AS average_delay
+    FROM tweakit_perf_db.flights.flightperformance AS fp
+    GROUP BY
+        uniquecarrier,
+        month
+)
+
+SELECT
+    uniquecarrier,
+    description,
+    month,
+    average_delay
+FROM carrierdelays AS cd
+INNER JOIN tweakit_perf_db.flights.carriers AS c
+    ON uniquecarrier = code
+ORDER BY
+    uniquecarrier,
+    month
+LIMIT 100
+</td>
+                    <td>WITH carrierdelays AS (     SELECT         uniquecarrier,         month,         AVG(arrdelay) AS average_delay     FROM tweakit_perf_db.flights.flightperformance AS fp     GROUP BY         uniquecarrier,         month )  SELECT     uniquecarrier as carrier,     description,     month,     average_delay FROM carrierdelays AS cd INNER JOIN tweakit_perf_db.flights.carriers AS c     ON uniquecarrier = code ORDER BY     uniquecarrier,     month limit 100</td>
+                    <td>None</td>
+                    <td>True</td>
+                    <td>None</td>
+                    <td>15.31</td>
+                    <td>0.2982</td>
+                    <td>0.2848</td>
+                    <td>None</td>
+                    <td>['FLIGHTPERFORMANCE', 'CARRIERS']</td>
+                    <td>False</td>
+                    <td>a032d571-3462-4372-a97c-a49544b04b7d</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>Comparison failed for row: exp={'uniquecarrier': '9E', 'description': 'Pinnacle Airlines Inc.', 'month': 1, 'average_delay': Decimal('9.692866')}, act={'carrier': '9E', 'description': 'Pinnacle Airlines Inc.', 'month': 1, 'average_delay': Decimal('9.692866')}</td>
+                </tr>
+            
+                <tr >
+                    <td>flights_6</td>
+                    <td>Top 5 busiest airports by flight count. Display as airport, total_flights.</td>
+                    <td>True</td>
+                    <td>WITH arrival_counts AS (
+    SELECT
+        dest AS airport_code,
+        COUNT(*) AS arrival_flights
+    FROM tweakit_perf_db.flights.flightperformance
+    GROUP BY
+        dest
+),
+
+departure_counts AS (
+    SELECT
+        origin AS airport_code,
+        COUNT(*) AS departure_flights
+    FROM tweakit_perf_db.flights.flightperformance
+    GROUP BY
+        origin
+),
+
+total_counts AS (
+    SELECT
+        ac.airport_code,
+        (
+            COALESCE(arrival_flights, 0) + COALESCE(departure_flights, 0)
+        ) AS total_flights
+    FROM arrival_counts AS ac
+    FULL OUTER JOIN departure_counts AS dc
+        ON ac.airport_code = dc.airport_code
+)
+
+SELECT
+    airport,
+    total_flights
+FROM total_counts AS tc
+INNER JOIN tweakit_perf_db.flights.airports AS ap
+    ON airport_code = iata
+ORDER BY
+    total_flights DESC
+LIMIT 5
+</td>
+                    <td>WITH TOTAL_FLIGHTS AS (SELECT ORIGIN AS AIRPORT, COUNT(*) AS C FROM FLIGHTPERFORMANCE GROUP BY ORIGIN UNION ALL SELECT DEST AS AIRPORT, COUNT(*) AS C FROM FLIGHTPERFORMANCE GROUP BY DEST) SELECT AIRPORT as AIRPORT, SUM(C) AS TOTAL_FLIGHTS FROM TOTAL_FLIGHTS GROUP BY AIRPORT ORDER BY TOTAL_FLIGHTS DESC LIMIT 5;</td>
+                    <td>None</td>
+                    <td>True</td>
+                    <td>None</td>
+                    <td>25.22</td>
+                    <td>0.3086</td>
+                    <td>0.2881</td>
+                    <td>None</td>
+                    <td>['AIRPORTS', 'FLIGHTPERFORMANCE']</td>
+                    <td>False</td>
+                    <td>f6544bf0-7f2e-492f-b334-7a2e1416e870</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>Comparison failed for row: exp={'airport': 'William B Hartsfield-Atlanta Intl', 'total_flights': 2777898}, act={'airport': 'ATL', 'total_flights': 2777898}</td>
+                </tr>
+            
+                <tr >
+                    <td>flights_7</td>
+                    <td>What are the aircraft types that are most prone to delays (e.g arrival delay, departure delay, carrier delay, weather delay, nasdelay, security delay, carrier delay)? Display as type. Display top 1 row.</td>
+                    <td>True</td>
+                    <td>WITH aircraftdelays AS (
+    SELECT
+        aircraft_type,
+        SUM(arrdelay + depdelay + carrierdelay + weatherdelay + nasdelay + securitydelay) AS totaldelay
+    FROM tweakit_perf_db.flights.flightperformance AS fp
+    INNER JOIN tweakit_perf_db.flights.planedata AS pd
+        ON fp.tailnum = pd.tailnum
+    GROUP BY
+        aircraft_type
+)
+
+SELECT aircraft_type AS type
+FROM aircraftdelays AS ad
+ORDER BY
+    totaldelay DESC
+LIMIT 1
+</td>
+                    <td>select p.aircraft_type as type, sum(arrdelay + depdelay + carrierdelay + weatherdelay + nasdelay + securitydelay + lateaircraftdelay) as total_delay from flightperformance as fp  inner join planedata as p on p.tailnum = fp.tailnum group by p.aircraft_type order by total_delay desc limit 1</td>
+                    <td>None</td>
+                    <td>True</td>
+                    <td>None</td>
+                    <td>17.06</td>
+                    <td>0.2912</td>
+                    <td>0.2797</td>
+                    <td>None</td>
+                    <td>['FLIGHTPERFORMANCE', 'PLANEDATA']</td>
+                    <td>False</td>
+                    <td>cb332cd6-2da6-4e8a-b837-0944518cb215</td>
+                    <td>False</td>
+                    <td>False</td>
+                    <td>Comparison failed for row: exp={'type': 'Fixed Wing Multi-Engine'}, act={'type': 'Fixed Wing Multi-Engine', 'total_delay': 622726497}</td>
+                </tr>
+            
+                <tr >
+                    <td>flights_8</td>
+                    <td>What are the most common destination states for each carrier? Display as carrier, state. Sort by carrier. Show 100 rows.</td>
+                    <td>True</td>
+                    <td>WITH carrierdestinations AS (
+    SELECT
+        description AS carrier,
+        state,
+        COUNT(*) AS flights_count
+    FROM tweakit_perf_db.flights.flightperformance AS fp
+    INNER JOIN tweakit_perf_db.flights.airports AS a
+        ON dest = iata
+    INNER JOIN tweakit_perf_db.flights.carriers AS c
+        ON uniquecarrier = code
+    GROUP BY
+        description,
+        state
+),
+
+rankedstates AS (
+    SELECT
+        carrier,
+        state,
+        RANK() OVER (PARTITION BY carrier ORDER BY flights_count DESC) AS rank
+    FROM carrierdestinations
+)
+
+SELECT
+    carrier,
+    state
+FROM rankedstates
+WHERE
+    rank = 1
+ORDER BY
+    carrier
+LIMIT 100
+</td>
+                    <td>WITH CARRIERDESTINATIONS AS (SELECT DESCRIPTION AS CARRIER, STATE, COUNT(*) AS FLIGHTS_COUNT FROM TWEAKIT_PERF_DB.FLIGHTS.FLIGHTPERFORMANCE AS FP INNER JOIN TWEAKIT_PERF_DB.FLIGHTS.CARRIERS AS C ON UNIQUECARRIER = CODE INNER JOIN TWEAKIT_PERF_DB.FLIGHTS.AIRPORTS AS A ON DEST = IATA GROUP BY DESCRIPTION, STATE), RANKEDSTATES AS (SELECT CARRIER, STATE, FLIGHTS_COUNT, RANK() OVER (PARTITION BY CARRIER ORDER BY FLIGHTS_COUNT DESC) AS RANK FROM CARRIERDESTINATIONS) SELECT CARRIER, STATE FROM RANKEDSTATES WHERE RANK = 1 ORDER BY CARRIER;</td>
+                    <td>None</td>
+                    <td>True</td>
+                    <td>None</td>
+                    <td>21.2</td>
+                    <td>1.2205</td>
+                    <td>1.0945</td>
+                    <td>None</td>
+                    <td>['AIRPORTS', 'FLIGHTPERFORMANCE', 'CARRIERS']</td>
+                    <td>False</td>
+                    <td>7ec837d2-4378-4cdf-9ea7-32495cfc111e</td>
+                    <td>False</td>
+                    <td>True</td>
+                    <td></td>
+                </tr>
+            
+        </tbody>
+    </table>
+</body>
+
+</html>
