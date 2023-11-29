@@ -99,3 +99,88 @@ flights_8:
   auto_select_schema: 'false'
   schemas:
   - flights
+flights_9:
+  query_name: flights_9
+  question: What are the cancellation Rates by carrier and month? Display as carrier_code, description, month, cancellation_rate.
+  golden_query: select UNIQUECARRIER as carrier_code, month, (sum(case when cancelled=1 then 1 else 0 end ) / count(*)) * 100 as cancelled_rate   from FLIGHTPERFORMANCE group by UNIQUECARRIER, month order by cancelled_rate desc;
+  comparison_rules:
+  - columns:
+    - carrier_code
+    - month
+    - cancelled_rate
+    match: exact
+  auto_select_schema: 'false'
+  schemas:
+  - flights
+flights_10:
+  query_name: flights_10
+  question: What are the monthly trend of average delays for the carriers? Display as carrier, month and avgDelay.
+  golden_query: select UNIQUECARRIER as carrier, month, avg(ARRDELAY + depdelay) as avgDelay from FLIGHTPERFORMANCE group by uniquecarrier, month order by avgDelay desc
+  comparison_rules:
+  - columns:
+    - month
+    - avgDelay
+    match: exact
+  auto_select_schema: 'false'
+  schemas:
+  - flights
+flights_11:
+  query_name: flights_11
+  question: What are the top 3 most common aircraft models for each airline? Display as description, model, total_flights.
+  golden_query: select c.description as description, a.model as model, a.total_flights as total_flights  from (select UNIQUECARRIER, model, total_flights, row_number() over (partition by UNIQUECARRIER order by total_flights desc) as r from (select fp.UNIQUECARRIER, p.model, count(*) as total_flights  from FLIGHTPERFORMANCE fp inner join PLANEDATA p on p.TAILNUM = fp.TAILNUM group by fp.uniquecarrier, p.model)) a inner join carriers c on c.code = a.uniquecarrier where r <=3;
+  comparison_rules:
+  - columns:
+    - description
+    - model
+    - total_flights
+    match: exact
+  auto_select_schema: 'false'
+  schemas:
+  - flights
+flights_12:
+  query_name: flights_12
+  question: What is the yearly change in flight volumes for each carrier? Display as uniquecarrier, year, this_year_vol, yearly_change.
+  golden_query: select uniquecarrier, year, this_year_vol, (this_year_vol - prev_year_vol) as yearly_change from (select UNIQUECARRIER, year, count(*) as this_year_vol, LAG(count(*)) OVER(PARTITION BY UNIQUECARRIER ORDER BY YEAR) as prev_year_vol from FLIGHTPERFORMANCE group by uniquecarrier, year);
+  comparison_rules:
+    - columns:
+        - uniquecarrier
+        - YEAR
+        - THIS_YEAR_VOL
+        - YEARLY_CHANGE
+      match: exact
+  auto_select_schema: 'false'
+  schemas:
+    - flights
+flights_13:
+  query_name: flights_13
+  question: What are the top 5 busiest travel days of the year?
+  golden_query: select year, month, dayofmonth, count(*) as total_flights from FLIGHTPERFORMANCE group by year, month, dayofmonth order by total_flights desc limit 5;
+  comparison_rules:
+    - columns:
+        - '*'
+      match: exact
+  auto_select_schema: 'false'
+  schemas:
+    - flights
+flights_14:
+  query_name: flights_14
+  question: How have flight volumes and delays (arrival delay and depature delays) changed Year-over-Year for each Carrier? Display uniquecarrier, year, this_year_vol, yearly_change, yaerly_change_delay.
+  golden_query: SELECT UNIQUECARRIER, YEAR, THIS_YEAR_VOL, (THIS_YEAR_VOL - PREV_YEAR_VOL) AS YEARLY_CHANGE, (THIS_YEAR_DELAY - PREV_YEAR_AVG_DELAY) AS YEARLY_CHANGE_DELAY FROM (SELECT UNIQUECARRIER, YEAR, COUNT(*) AS THIS_YEAR_VOL, LAG(COUNT(*)) OVER(PARTITION BY UNIQUECARRIER ORDER BY YEAR) AS PREV_YEAR_VOL, AVG(ARRDELAY + DEPDELAY) AS THIS_YEAR_DELAY, LAG(AVG(ARRDELAY + DEPDELAY)) OVER (PARTITION BY UNIQUECARRIER ORDER BY YEAR) AS PREV_YEAR_AVG_DELAY FROM FLIGHTPERFORMANCE GROUP BY UNIQUECARRIER, YEAR);
+  comparison_rules:
+    - columns:
+        - '*'
+      match: exact
+  auto_select_schema: 'false'
+  schemas:
+    - flights
+flights_15:
+  query_name: flights_15
+  question: Which Airlines Have the Highest Frequency of Cancellations? Display as carrier, total_cancelled.
+  golden_query: select uniquecarrier, sum(case when CANCELLED=1 then 1 else 0 end) as total_cancelled from FLIGHTPERFORMANCE group by uniquecarrier order by total_cancelled desc;
+  comparison_rules:
+    - columns:
+        - '*'
+      match: oneof
+  auto_select_schema: 'false'
+  schemas:
+    - flights

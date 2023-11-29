@@ -12,5 +12,12 @@
     "labels": null,
     "scope": "flights.flightperformance",
     "always_include": true
+  },
+  {
+    "id": "81d3bbf5-00f0-4357-9eda-880abcc6e27b",
+    "statement": "Do not use TO_JSON in final result projection unless asked explicitly",
+    "labels": null,
+    "scope": "flights",
+    "always_include": true
   }
 ]

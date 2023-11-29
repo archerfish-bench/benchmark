@@ -251,11 +251,11 @@ def compare_results(expected, actual, comparison_rules, intent_based_match: bool
                 else:
                     return False
                 for key in actual_row.keys():
-                    if expected_value is None:
-                        if actual_row[key] is None or actual_row[key] == 0:
-                            matched = True
-                            del actual_row[key]
-                            break
+                    if ((expected_value is None or expected_value == 0) and
+                            (actual_row[key] is None or actual_row[key] == 0)):
+                        matched = True
+                        del actual_row[key]
+                        break
                     elif isinstance(expected_value, (int, float, decimal.Decimal)) and isinstance(actual_row[key], (int, float, decimal.Decimal)):
                         if actual_row[key] is not None and (
                                 str(round(expected_value, 1)) == str(round(actual_row[key], 1))):
@@ -300,10 +300,10 @@ def compare_results(expected, actual, comparison_rules, intent_based_match: bool
                 elif "*" in expected_row:
                     expected_value = expected_row["*"]
                 for key in actual_row.keys():
-                    if expected_value is None:
-                        if actual_row[key] is None:
-                            return True
-                            break
+                    if ((expected_value is None or expected_value == 0) and
+                            (actual_row[key] is None or actual_row[key] == 0)):
+                        del actual_row[key]
+                        return True
                     elif isinstance(expected_value, (int, float, decimal.Decimal)) and isinstance(actual_row[key], (int, float, decimal.Decimal)):
                         if actual_row[key] is not None and (
                                 str(round(expected_value, 1)) == str(round(actual_row[key], 1))):

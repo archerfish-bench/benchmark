@@ -191,6 +191,13 @@ class BenchmarkBase:
     def get_results(self) -> list:
         return self.task_results
 
+    @staticmethod
+    def _use_schema(connector: DatabaseConnector, schema: str):
+        try:
+            connector.execute_and_fetch_all(f"USE schema {schema}")
+        except Exception as e:
+            logging.error(f"Exception while setting schema: {str(e)}")
+
     def run_query_and_compare(self, query_info: dict) -> TaskResult:
         """
         Generate query, run it and get results. Compare with golden query results.
@@ -200,6 +207,11 @@ class BenchmarkBase:
         task_result.golden_query_tables = tables
         if str(task_result.generated_query).strip() == str(query_info[GOLDEN_QUERY]).strip():
             task_result.gen_query_same_as_golden_query = True
+
+        if (query_info['schemas'] is not None and len(query_info['schemas']) > 0):
+            schema = query_info['schemas'][0]
+            # For golden queries, set the schema to be on safer side
+            self._use_schema(self.source_db_connector, schema)
 
         if task_result.is_query_generated:
             gen_query_result = None
@@ -273,7 +285,7 @@ class BenchmarkBase:
 
         # For regular comparison
         (task_result.is_results_comparison_fine,
-         task_result.results_comparison_error) = compare_results(gen_query_result, golden_query_result,
+         task_result.results_comparison_error) = compare_results(golden_query_result, gen_query_result,
                                         query_info.get('comparison_rules'),
                                         intent_based_match=self.intent_based_match,
                                         source_db_type=source_db_type,

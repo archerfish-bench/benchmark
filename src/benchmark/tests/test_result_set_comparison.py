@@ -172,11 +172,12 @@ class TestCompareResults(unittest.TestCase):
         actual = [{'a': '0', 'b': 1, 'c': 0}, {'a': '0.0', 'b': 1.5, 'c': 0}]
         rules = [{'match': 'exact', 'columns': ['a', 'b', 'c']}]
         self.assertEqual(compare_results(expected, actual, rules), (True, ""))
+        self.assertEqual(compare_results(actual, expected, rules), (True, ""))
 
         expected = [{'a': 0, 'b': '1', 'c': 0}, {'a': 0.0, 'b': '1.5', 'c': 0}]
-        actual = [{'a': '0', 'b': 1, 'c': None}, {'a': '0.0', 'b': 1.5, 'c': None}]
+        actual = [{'a': '0', 'b': 1, 'c': None}, {'a': '0.0', 'b': 1.5, 'c': 0}]
         rules = [{'match': 'exact', 'columns': ['a', 'b', 'c']}]
-        self.assertNotEquals(compare_results(expected, actual, rules), (True, ""))
+        self.assertEqual(compare_results(expected, actual, rules), (True, ''))
 
 
 if __name__ == '__main__':
