@@ -19,5 +19,12 @@
     "labels": null,
     "scope": "flights",
     "always_include": true
+  },
+  {
+    "id": "81d3bbf5-00f0-4357-9eda-880abcc6e28b",
+    "statement": "Utilize window functions such as ROW_NUMBER() or RANK() to partition data by the relevant category and order within those partitions to accurately retrieve the leading item in each group.",
+    "labels": null,
+    "scope": "flights",
+    "always_include": true
   }
 ]

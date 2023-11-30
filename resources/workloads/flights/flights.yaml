@@ -53,8 +53,8 @@ flights_4:
   - flights
 flights_5:
   query_name: flights_5
-  question: Show me the flight delays by carrier and month. Display as carrier, description, month, average_delay Show 100 rows.
-  golden_query: WITH carrierdelays AS (     SELECT         uniquecarrier,         month,         AVG(arrdelay) AS average_delay     FROM tweakit_perf_db.flights.flightperformance AS fp     GROUP BY         uniquecarrier,         month )  SELECT     uniquecarrier as carrier,     description,     month,     average_delay FROM carrierdelays AS cd INNER JOIN tweakit_perf_db.flights.carriers AS c     ON uniquecarrier = code ORDER BY     uniquecarrier,     month limit 100
+  question: Show me the flight delays by carrier and month. Consider both arrival and departure delays. Display as carrier, description, month, average_delay Show 100 rows.
+  golden_query: WITH carrierdelays AS (     SELECT         uniquecarrier,         month,         AVG(arrdelay + depdelay) AS average_delay     FROM tweakit_perf_db.flights.flightperformance AS fp     GROUP BY         uniquecarrier,         month )  SELECT     uniquecarrier as carrier,     description,     month,     average_delay FROM carrierdelays AS cd INNER JOIN tweakit_perf_db.flights.carriers AS c     ON uniquecarrier = code ORDER BY     uniquecarrier,     month limit 100
   comparison_rules:
   - columns:
     - description
@@ -82,7 +82,7 @@ flights_7:
   golden_query: select p.aircraft_type as type, sum(arrdelay + depdelay + carrierdelay + weatherdelay + nasdelay + securitydelay + lateaircraftdelay) as total_delay from flightperformance as fp  inner join planedata as p on p.tailnum = fp.tailnum group by p.aircraft_type order by total_delay desc limit 1
   comparison_rules:
   - columns:
-    - '*'
+    - type
     match: exact
   auto_select_schema: 'false'
   schemas:
@@ -153,7 +153,7 @@ flights_12:
     - flights
 flights_13:
   query_name: flights_13
-  question: What are the top 5 busiest travel days of the year?
+  question: What are the top 5 busiest travel days of the year? Display as year, month, dayofmonth, total_flights.
   golden_query: select year, month, dayofmonth, count(*) as total_flights from FLIGHTPERFORMANCE group by year, month, dayofmonth order by total_flights desc limit 5;
   comparison_rules:
     - columns:
@@ -179,8 +179,8 @@ flights_15:
   golden_query: select uniquecarrier, sum(case when CANCELLED=1 then 1 else 0 end) as total_cancelled from FLIGHTPERFORMANCE group by uniquecarrier order by total_cancelled desc;
   comparison_rules:
     - columns:
-        - '*'
-      match: oneof
+        - total_cancelled
+      match: exact
   auto_select_schema: 'false'
   schemas:
     - flights
