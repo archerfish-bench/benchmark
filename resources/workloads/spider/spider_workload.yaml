@@ -4736,7 +4736,7 @@ spider_297:
 spider_298:
   query_name: spider_298
   question: How many documents do we have? Display as num_docs.
-  golden_query: SELECT count(*) as num_docs FROM spider_dev.cre_Doc_Template_Mgt.Documents
+  golden_query: SELECT count(*) as num_docs FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Documents
   tables:
   - Documents
   comparison_rules:
@@ -4745,11 +4745,11 @@ spider_298:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_299:
   query_name: spider_299
   question: Count the number of documents.Display as num_docs.
-  golden_query: SELECT count(*) as num_docs FROM spider_dev.cre_Doc_Template_Mgt.Documents
+  golden_query: SELECT count(*) as num_docs FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Documents
   tables:
   - Documents
   comparison_rules:
@@ -4758,11 +4758,11 @@ spider_299:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_300:
   query_name: spider_300
   question: List document IDs, document names, and document descriptions for all documents.
-  golden_query: SELECT document_id ,  document_name ,  document_description FROM spider_dev.cre_Doc_Template_Mgt.Documents
+  golden_query: SELECT document_id ,  document_name ,  document_description FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Documents
   tables:
   - Documents
   comparison_rules:
@@ -4773,11 +4773,11 @@ spider_300:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_301:
   query_name: spider_301
   question: What are the ids, names, and descriptions for all documents?
-  golden_query: SELECT document_id ,  document_name ,  document_description FROM spider_dev.cre_Doc_Template_Mgt.Documents
+  golden_query: SELECT document_id ,  document_name ,  document_description FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Documents
   tables:
   - Documents
   comparison_rules:
@@ -4788,12 +4788,12 @@ spider_301:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_302:
   query_name: spider_302
   question: What is the document name and template id for document with description
     with the letter 'w' in it?
-  golden_query: SELECT document_name ,  template_id FROM spider_dev.cre_Doc_Template_Mgt.Documents
+  golden_query: SELECT document_name ,  template_id FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Documents
     WHERE Document_Description LIKE '%w%'
   tables:
   - Documents
@@ -4804,12 +4804,12 @@ spider_302:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_303:
   query_name: spider_303
   question: Return the names and template ids for documents that contain the letter
     w in their description.
-  golden_query: SELECT document_name ,  template_id FROM spider_dev.cre_Doc_Template_Mgt.Documents
+  golden_query: SELECT document_name ,  template_id FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Documents
     WHERE Document_Description LIKE '%w%'
   tables:
   - Documents
@@ -4820,12 +4820,12 @@ spider_303:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_304:
   query_name: spider_304
   question: What is the document id, template id and description for document named
     'Robbin CV'?
-  golden_query: SELECT document_id ,  template_id ,  Document_Description FROM spider_dev.cre_Doc_Template_Mgt.Documents
+  golden_query: SELECT document_id ,  template_id ,  Document_Description FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Documents
     WHERE document_name  =  'Robbin CV'
   tables:
   - Documents
@@ -4837,12 +4837,12 @@ spider_304:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_305:
   query_name: spider_305
   question: Return the document id, template id, and description for the document
     with the name Robbin CV.
-  golden_query: SELECT document_id ,  template_id ,  Document_Description FROM spider_dev.cre_Doc_Template_Mgt.Documents
+  golden_query: SELECT document_id ,  template_id ,  Document_Description FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Documents
     WHERE document_name  =  'Robbin CV'
   tables:
   - Documents
@@ -4854,11 +4854,11 @@ spider_305:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_306:
   query_name: spider_306
   question: How many different templates do all document use? Display as num_templates.
-  golden_query: SELECT count(DISTINCT template_id) as num_templates FROM spider_dev.cre_Doc_Template_Mgt.Documents
+  golden_query: SELECT count(DISTINCT template_id) as num_templates FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Documents
   tables:
   - Documents
   comparison_rules:
@@ -4867,12 +4867,12 @@ spider_306:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_307:
   query_name: spider_307
   question: Count the number of different templates used for documents.Display as
     num_templates.
-  golden_query: SELECT count(DISTINCT template_id) as num_templates FROM spider_dev.cre_Doc_Template_Mgt.Documents
+  golden_query: SELECT count(DISTINCT template_id) as num_templates FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Documents
   tables:
   - Documents
   comparison_rules:
@@ -4881,13 +4881,13 @@ spider_307:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_308:
   query_name: spider_308
   question: How many documents are using the template with type code 'PPT'? Display
     as num_docs.
-  golden_query: SELECT count(*) as num_docs FROM spider_dev.cre_Doc_Template_Mgt.Documents
-    AS T1 JOIN spider_dev.cre_Doc_Template_Mgt.Templates AS T2 ON T1.Template_ID  =  T2.Template_ID
+  golden_query: SELECT count(*) as num_docs FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Documents
+    AS T1 JOIN spider_dev.CRE_DOC_TEMPLATE_MGT.Templates AS T2 ON T1.Template_ID  =  T2.Template_ID
     WHERE T2.Template_Type_Code  =  'PPT'
   tables:
   - Templates
@@ -4898,13 +4898,13 @@ spider_308:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_309:
   query_name: spider_309
   question: Count the number of documents that use template type 'PPT'. Display as
     num_docs.
-  golden_query: SELECT count(*) as num_docs FROM spider_dev.cre_Doc_Template_Mgt.Documents
-    AS T1 JOIN spider_dev.cre_Doc_Template_Mgt.Templates AS T2 ON T1.Template_ID  =  T2.Template_ID
+  golden_query: SELECT count(*) as num_docs FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Documents
+    AS T1 JOIN spider_dev.CRE_DOC_TEMPLATE_MGT.Templates AS T2 ON T1.Template_ID  =  T2.Template_ID
     WHERE T2.Template_Type_Code  =  'PPT'
   tables:
   - Templates
@@ -4915,14 +4915,14 @@ spider_309:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_310:
   query_name: spider_310
   question: Show all template ids in templates and number of documents using each
     template.
   golden_query: "WITH document_counts AS (\nSELECT\ntemplate_id,\nCOUNT(*) AS num_documents\n
-    FROM spider_dev.cre_doc_template_mgt.documents\nGROUP BY\ntemplate_id\n)\n\nSELECT\n
-    t.template_id,\nCOALESCE(dc.num_documents, 0) AS num_documents\nFROM spider_dev.cre_doc_template_mgt.templates
+    FROM spider_dev.CRE_DOC_TEMPLATE_MGT.documents\nGROUP BY\ntemplate_id\n)\n\nSELECT\n
+    t.template_id,\nCOALESCE(dc.num_documents, 0) AS num_documents\nFROM spider_dev.CRE_DOC_TEMPLATE_MGT.templates
     AS t\nLEFT JOIN document_counts AS dc\nON t.template_id = dc.template_id"
   tables: []
   comparison_rules:
@@ -4932,12 +4932,12 @@ spider_310:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_311:
   query_name: spider_311
   question: What are all different template ids used for documents, and how many times
     were each of them used? Display as num_documents
-  golden_query: SELECT template_id ,  count(*) as num_documents FROM spider_dev.cre_Doc_Template_Mgt.Documents
+  golden_query: SELECT template_id ,  count(*) as num_documents FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Documents
     GROUP BY template_id
   tables:
   - Documents
@@ -4948,13 +4948,13 @@ spider_311:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_312:
   query_name: spider_312
   question: What is the id and type code for the template used by the most documents?
     Display 1 row.
-  golden_query: SELECT T1.template_id ,  T2.Template_Type_Code FROM spider_dev.cre_Doc_Template_Mgt.Documents
-    AS T1 JOIN spider_dev.cre_Doc_Template_Mgt.Templates AS T2 ON T1.template_id  =  T2.template_id
+  golden_query: SELECT T1.template_id ,  T2.Template_Type_Code FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Documents
+    AS T1 JOIN spider_dev.CRE_DOC_TEMPLATE_MGT.Templates AS T2 ON T1.template_id  =  T2.template_id
     GROUP BY T1.template_id ,  T2.Template_Type_Code ORDER BY count(*) DESC LIMIT
     1
   tables:
@@ -4967,14 +4967,14 @@ spider_312:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_313:
   query_name: spider_313
   question: Return the unique id and type code of the template that is used for the
     greatest number of documents. Sort by number of documents in descending order.
     Show 1 row.
-  golden_query: SELECT T1.template_id ,  T2.Template_Type_Code FROM spider_dev.cre_Doc_Template_Mgt.Documents
-    AS T1 JOIN spider_dev.cre_Doc_Template_Mgt.Templates AS T2 ON T1.template_id  =  T2.template_id
+  golden_query: SELECT T1.template_id ,  T2.Template_Type_Code FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Documents
+    AS T1 JOIN spider_dev.CRE_DOC_TEMPLATE_MGT.Templates AS T2 ON T1.template_id  =  T2.template_id
     GROUP BY T1.template_id ,  T2.Template_Type_Code ORDER BY count(*) DESC LIMIT
     1
   tables:
@@ -4987,11 +4987,11 @@ spider_313:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_314:
   query_name: spider_314
   question: Show ids for all templates that are used by more than one document.
-  golden_query: SELECT template_id FROM spider_dev.cre_Doc_Template_Mgt.Documents
+  golden_query: SELECT template_id FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Documents
     GROUP BY template_id HAVING count(*)  >  1
   tables:
   - Documents
@@ -5001,12 +5001,12 @@ spider_314:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_315:
   query_name: spider_315
   question: What are the template ids of any templates used in more than a single
     document?
-  golden_query: SELECT template_id FROM spider_dev.cre_Doc_Template_Mgt.Documents
+  golden_query: SELECT template_id FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Documents
     GROUP BY template_id HAVING count(*)  >  1
   tables:
   - Documents
@@ -5016,12 +5016,12 @@ spider_315:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_316:
   query_name: spider_316
   question: Show ids for all templates not used by any document.
-  golden_query: SELECT template_id FROM spider_dev.cre_Doc_Template_Mgt.Templates
-    EXCEPT SELECT template_id FROM spider_dev.cre_Doc_Template_Mgt.Documents
+  golden_query: SELECT template_id FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Templates
+    EXCEPT SELECT template_id FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Documents
   tables:
   - Templates
   - Documents
@@ -5031,12 +5031,12 @@ spider_316:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_317:
   query_name: spider_317
   question: What are the ids for templates that are not used in any documents?
-  golden_query: SELECT template_id FROM spider_dev.cre_Doc_Template_Mgt.Templates
-    EXCEPT SELECT template_id FROM spider_dev.cre_Doc_Template_Mgt.Documents
+  golden_query: SELECT template_id FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Templates
+    EXCEPT SELECT template_id FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Documents
   tables:
   - Templates
   - Documents
@@ -5046,11 +5046,11 @@ spider_317:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_318:
   query_name: spider_318
   question: How many records are there in templates table? Display as num_rec.
-  golden_query: SELECT count(*) as num_rec FROM spider_dev.cre_Doc_Template_Mgt.Templates
+  golden_query: SELECT count(*) as num_rec FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Templates
   tables:
   - Templates
   comparison_rules:
@@ -5059,11 +5059,11 @@ spider_318:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_319:
   query_name: spider_319
   question: Count the number of template id.Display as num_rec.
-  golden_query: SELECT count(*) as num_rec FROM spider_dev.cre_Doc_Template_Mgt.Templates
+  golden_query: SELECT count(*) as num_rec FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Templates
   tables:
   - Templates
   comparison_rules:
@@ -5072,11 +5072,11 @@ spider_319:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_320:
   query_name: spider_320
   question: Show template ids, version numbers, and template type codes for all templates.
-  golden_query: SELECT template_id ,  version_number ,  template_type_code FROM spider_dev.cre_Doc_Template_Mgt.Templates
+  golden_query: SELECT template_id ,  version_number ,  template_type_code FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Templates
   tables:
   - Templates
   comparison_rules:
@@ -5087,11 +5087,11 @@ spider_320:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_321:
   query_name: spider_321
   question: What are the ids, version numbers, and type codes for each template?
-  golden_query: SELECT template_id ,  version_number ,  template_type_code FROM spider_dev.cre_Doc_Template_Mgt.Templates
+  golden_query: SELECT template_id ,  version_number ,  template_type_code FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Templates
   tables:
   - Templates
   comparison_rules:
@@ -5102,11 +5102,11 @@ spider_321:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_322:
   query_name: spider_322
   question: Show all distinct template type codes for all templates.
-  golden_query: SELECT DISTINCT template_type_code FROM spider_dev.cre_Doc_Template_Mgt.Templates
+  golden_query: SELECT DISTINCT template_type_code FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Templates
   tables:
   - Templates
   comparison_rules:
@@ -5115,11 +5115,11 @@ spider_322:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_323:
   query_name: spider_323
   question: What are the different template type codes?
-  golden_query: SELECT DISTINCT template_type_code FROM spider_dev.cre_Doc_Template_Mgt.Templates
+  golden_query: SELECT DISTINCT template_type_code FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Templates
   tables:
   - Templates
   comparison_rules:
@@ -5128,11 +5128,11 @@ spider_323:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_324:
   query_name: spider_324
   question: What are the ids of templates with template type code PP or PPT?
-  golden_query: SELECT template_id FROM spider_dev.cre_Doc_Template_Mgt.Templates
+  golden_query: SELECT template_id FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Templates
     WHERE template_type_code  =  'PP' OR template_type_code  =  'PPT'
   tables:
   - Templates
@@ -5142,11 +5142,11 @@ spider_324:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_325:
   query_name: spider_325
   question: Return the ids of templates that have the code PP or PPT.
-  golden_query: SELECT template_id FROM spider_dev.cre_Doc_Template_Mgt.Templates
+  golden_query: SELECT template_id FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Templates
     WHERE template_type_code  =  'PP' OR template_type_code  =  'PPT'
   tables:
   - Templates
@@ -5156,11 +5156,11 @@ spider_325:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_326:
   query_name: spider_326
   question: How many templates have template type code CV? Display as num_temp.
-  golden_query: SELECT count(*) as num_temp FROM spider_dev.cre_Doc_Template_Mgt.Templates
+  golden_query: SELECT count(*) as num_temp FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Templates
     WHERE template_type_code  =  'CV'
   tables:
   - Templates
@@ -5170,11 +5170,11 @@ spider_326:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_327:
   query_name: spider_327
   question: Count the number of templates of the type CV.Display as num_temp.
-  golden_query: SELECT count(*) as num_temp FROM spider_dev.cre_Doc_Template_Mgt.Templates
+  golden_query: SELECT count(*) as num_temp FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Templates
     WHERE template_type_code  =  'CV'
   tables:
   - Templates
@@ -5184,12 +5184,12 @@ spider_327:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_328:
   query_name: spider_328
   question: What is the version number and template type code for the template with
     version number later than 5?
-  golden_query: SELECT version_number ,  template_type_code FROM spider_dev.cre_Doc_Template_Mgt.Templates
+  golden_query: SELECT version_number ,  template_type_code FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Templates
     WHERE version_number  >  5
   tables:
   - Templates
@@ -5200,12 +5200,12 @@ spider_328:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_329:
   query_name: spider_329
   question: Return the version numbers and template type codes of templates with a
     version number greater than 5.
-  golden_query: SELECT version_number ,  template_type_code FROM spider_dev.cre_Doc_Template_Mgt.Templates
+  golden_query: SELECT version_number ,  template_type_code FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Templates
     WHERE version_number  >  5
   tables:
   - Templates
@@ -5216,12 +5216,12 @@ spider_329:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_330:
   query_name: spider_330
   question: Show all template type codes and number of templates for each. Display
     as num_temp.
-  golden_query: SELECT template_type_code ,  count(*) as num_temp FROM spider_dev.cre_Doc_Template_Mgt.Templates
+  golden_query: SELECT template_type_code ,  count(*) as num_temp FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Templates
     GROUP BY template_type_code
   tables:
   - Templates
@@ -5232,12 +5232,12 @@ spider_330:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_331:
   query_name: spider_331
   question: What are the different template type codes, and how many templates correspond
     to each? Display as num_temp.
-  golden_query: SELECT template_type_code ,  count(*) as num_temp FROM spider_dev.cre_Doc_Template_Mgt.Templates
+  golden_query: SELECT template_type_code ,  count(*) as num_temp FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Templates
     GROUP BY template_type_code
   tables:
   - Templates
@@ -5248,11 +5248,11 @@ spider_331:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_332:
   query_name: spider_332
   question: Which template type code has most number of templates?
-  golden_query: SELECT template_type_code FROM spider_dev.cre_Doc_Template_Mgt.Templates
+  golden_query: SELECT template_type_code FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Templates
     GROUP BY template_type_code ORDER BY count(*) DESC LIMIT 1
   tables:
   - Templates
@@ -5262,12 +5262,12 @@ spider_332:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_333:
   query_name: spider_333
   question: Return the type code of the template type that the most templates belong
     to.
-  golden_query: SELECT template_type_code FROM spider_dev.cre_Doc_Template_Mgt.Templates
+  golden_query: SELECT template_type_code FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Templates
     GROUP BY template_type_code ORDER BY count(*) DESC LIMIT 1
   tables:
   - Templates
@@ -5277,11 +5277,11 @@ spider_333:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_334:
   query_name: spider_334
   question: Show all template type codes with less than three templates.
-  golden_query: SELECT template_type_code FROM spider_dev.cre_Doc_Template_Mgt.Templates
+  golden_query: SELECT template_type_code FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Templates
     GROUP BY template_type_code HAVING count(*)  <  3
   tables:
   - Templates
@@ -5291,11 +5291,11 @@ spider_334:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_335:
   query_name: spider_335
   question: What are the codes of template types that have fewer than 3 templates?
-  golden_query: SELECT template_type_code FROM spider_dev.cre_Doc_Template_Mgt.Templates
+  golden_query: SELECT template_type_code FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Templates
     GROUP BY template_type_code HAVING count(*)  <  3
   tables:
   - Templates
@@ -5305,13 +5305,13 @@ spider_335:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_336:
   query_name: spider_336
   question: For all template type code, what is the smallest version number? Display
     as min_version_number
   golden_query: SELECT template_type_code, min(Version_Number) as min_version_number
-    FROM spider_dev.cre_Doc_Template_Mgt.Templates group by template_type_code
+    FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Templates group by template_type_code
   tables:
   - Templates
   comparison_rules:
@@ -5321,13 +5321,13 @@ spider_336:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_337:
   query_name: spider_337
   question: Return the lowest version number, along with its corresponding template
     type code. Display as min_ver_number.
   golden_query: SELECT min(Version_Number) as min_ver_number,  template_type_code
-    FROM spider_dev.cre_Doc_Template_Mgt.Templates group by template_type_code
+    FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Templates group by template_type_code
   tables:
   - Templates
   comparison_rules:
@@ -5337,13 +5337,13 @@ spider_337:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_338:
   query_name: spider_338
   question: What is the template type code of the template used by document with the
     name 'Data base'?
-  golden_query: SELECT T1.template_type_code FROM spider_dev.cre_Doc_Template_Mgt.Templates
-    AS T1 JOIN spider_dev.cre_Doc_Template_Mgt.Documents AS T2 ON T1.template_id  =  T2.template_id
+  golden_query: SELECT T1.template_type_code FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Templates
+    AS T1 JOIN spider_dev.CRE_DOC_TEMPLATE_MGT.Documents AS T2 ON T1.template_id  =  T2.template_id
     WHERE T2.document_name  =  'Data base'
   tables:
   - Templates
@@ -5354,13 +5354,13 @@ spider_338:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_339:
   query_name: spider_339
   question: Return the template type code of the template that is used by a document
     named Data base.
-  golden_query: SELECT T1.template_type_code FROM spider_dev.cre_Doc_Template_Mgt.Templates
-    AS T1 JOIN spider_dev.cre_Doc_Template_Mgt.Documents AS T2 ON T1.template_id  =  T2.template_id
+  golden_query: SELECT T1.template_type_code FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Templates
+    AS T1 JOIN spider_dev.CRE_DOC_TEMPLATE_MGT.Documents AS T2 ON T1.template_id  =  T2.template_id
     WHERE T2.document_name  =  'Data base'
   tables:
   - Templates
@@ -5371,12 +5371,12 @@ spider_339:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_340:
   query_name: spider_340
   question: Show all document names using templates with template type code BK.
-  golden_query: SELECT T2.document_name FROM spider_dev.cre_Doc_Template_Mgt.Templates
-    AS T1 JOIN spider_dev.cre_Doc_Template_Mgt.Documents AS T2 ON T1.template_id  =  T2.template_id
+  golden_query: SELECT T2.document_name FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Templates
+    AS T1 JOIN spider_dev.CRE_DOC_TEMPLATE_MGT.Documents AS T2 ON T1.template_id  =  T2.template_id
     WHERE T1.template_type_code  =  'BK'
   tables:
   - Templates
@@ -5387,12 +5387,12 @@ spider_340:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_341:
   query_name: spider_341
   question: What are the names of documents that use templates with the code BK?
-  golden_query: SELECT T2.document_name FROM spider_dev.cre_Doc_Template_Mgt.Templates
-    AS T1 JOIN spider_dev.cre_Doc_Template_Mgt.Documents AS T2 ON T1.template_id  =  T2.template_id
+  golden_query: SELECT T2.document_name FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Templates
+    AS T1 JOIN spider_dev.CRE_DOC_TEMPLATE_MGT.Documents AS T2 ON T1.template_id  =  T2.template_id
     WHERE T1.template_type_code  =  'BK'
   tables:
   - Templates
@@ -5403,12 +5403,12 @@ spider_341:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_342:
   query_name: spider_342
   question: Show all template type codes and the number of documents using each type.
     Display as num_docs.
-  golden_query: SELECT r.template_type_code, COUNT(document_id) AS num_docs FROM spider_dev.cre_doc_template_mgt.ref_template_types AS r LEFT JOIN spider_dev.cre_doc_template_mgt.templates AS t ON r.template_type_code = t.template_type_code LEFT JOIN spider_dev.cre_doc_template_mgt.documents AS d ON t.template_id = d.template_id GROUP BY r.template_type_code ORDER BY num_docs DESC NULLS LAST
+  golden_query: SELECT r.template_type_code, COUNT(document_id) AS num_docs FROM spider_dev.CRE_DOC_TEMPLATE_MGT.ref_template_types AS r LEFT JOIN spider_dev.CRE_DOC_TEMPLATE_MGT.templates AS t ON r.template_type_code = t.template_type_code LEFT JOIN spider_dev.CRE_DOC_TEMPLATE_MGT.documents AS d ON t.template_id = d.template_id GROUP BY r.template_type_code ORDER BY num_docs DESC NULLS LAST
   tables:
   - Templates
   - Documents
@@ -5419,13 +5419,13 @@ spider_342:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_343:
   query_name: spider_343
   question: What are the different template type codes, and how many documents use
     each type? Display as num_docs.
-  golden_query: SELECT T1.template_type_code ,  count(*) as num_docs FROM spider_dev.cre_Doc_Template_Mgt.Templates
-    AS T1 JOIN spider_dev.cre_Doc_Template_Mgt.Documents AS T2 ON T1.template_id  =  T2.template_id
+  golden_query: SELECT T1.template_type_code ,  count(*) as num_docs FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Templates
+    AS T1 JOIN spider_dev.CRE_DOC_TEMPLATE_MGT.Documents AS T2 ON T1.template_id  =  T2.template_id
     GROUP BY T1.template_type_code
   tables:
   - Templates
@@ -5437,12 +5437,12 @@ spider_343:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_344:
   query_name: spider_344
   question: Which template type code is used by most number of documents?
-  golden_query: SELECT T1.template_type_code FROM spider_dev.cre_Doc_Template_Mgt.Templates
-    AS T1 JOIN spider_dev.cre_Doc_Template_Mgt.Documents AS T2 ON T1.template_id  =  T2.template_id
+  golden_query: SELECT T1.template_type_code FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Templates
+    AS T1 JOIN spider_dev.CRE_DOC_TEMPLATE_MGT.Documents AS T2 ON T1.template_id  =  T2.template_id
     GROUP BY T1.template_type_code ORDER BY count(*) DESC LIMIT 1
   tables:
   - Templates
@@ -5453,12 +5453,12 @@ spider_344:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_345:
   query_name: spider_345
   question: Return the code of the template type that is most commonly used in documents.
-  golden_query: SELECT T1.template_type_code FROM spider_dev.cre_Doc_Template_Mgt.Templates
-    AS T1 JOIN spider_dev.cre_Doc_Template_Mgt.Documents AS T2 ON T1.template_id  =  T2.template_id
+  golden_query: SELECT T1.template_type_code FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Templates
+    AS T1 JOIN spider_dev.CRE_DOC_TEMPLATE_MGT.Documents AS T2 ON T1.template_id  =  T2.template_id
     GROUP BY T1.template_type_code ORDER BY count(*) DESC LIMIT 1
   tables:
   - Templates
@@ -5469,13 +5469,13 @@ spider_345:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_346:
   query_name: spider_346
   question: Show all template type codes that are not used by any document.
-  golden_query: SELECT template_type_code FROM spider_dev.cre_Doc_Template_Mgt.Templates
-    EXCEPT SELECT template_type_code FROM spider_dev.cre_Doc_Template_Mgt.Templates
-    AS T1 JOIN spider_dev.cre_Doc_Template_Mgt.Documents AS T2 ON T1.template_id  =  T2.template_id
+  golden_query: SELECT template_type_code FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Templates
+    EXCEPT SELECT template_type_code FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Templates
+    AS T1 JOIN spider_dev.CRE_DOC_TEMPLATE_MGT.Documents AS T2 ON T1.template_id  =  T2.template_id
   tables:
   - Templates
   - Documents
@@ -5485,13 +5485,13 @@ spider_346:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_347:
   query_name: spider_347
   question: What are the codes of template types that are not used for any document?
-  golden_query: SELECT template_type_code FROM spider_dev.cre_Doc_Template_Mgt.Templates
-    EXCEPT SELECT template_type_code FROM spider_dev.cre_Doc_Template_Mgt.Templates
-    AS T1 JOIN spider_dev.cre_Doc_Template_Mgt.Documents AS T2 ON T1.template_id  =  T2.template_id
+  golden_query: SELECT template_type_code FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Templates
+    EXCEPT SELECT template_type_code FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Templates
+    AS T1 JOIN spider_dev.CRE_DOC_TEMPLATE_MGT.Documents AS T2 ON T1.template_id  =  T2.template_id
   tables:
   - Templates
   - Documents
@@ -5501,11 +5501,11 @@ spider_347:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_348:
   query_name: spider_348
   question: Show all template type codes and descriptions.
-  golden_query: SELECT template_type_code ,  template_type_description FROM spider_dev.cre_Doc_Template_Mgt.Ref_template_types
+  golden_query: SELECT template_type_code ,  template_type_description FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Ref_template_types
   tables:
   - Ref_template_types
   comparison_rules:
@@ -5515,11 +5515,11 @@ spider_348:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_349:
   query_name: spider_349
   question: What are the type codes and descriptions for all template types?
-  golden_query: SELECT template_type_code ,  template_type_description FROM spider_dev.cre_Doc_Template_Mgt.Ref_template_types
+  golden_query: SELECT template_type_code ,  template_type_description FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Ref_template_types
   tables:
   - Ref_template_types
   comparison_rules:
@@ -5529,11 +5529,11 @@ spider_349:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_350:
   query_name: spider_350
   question: What is the template type descriptions for template type code 'AD'.
-  golden_query: SELECT template_type_description FROM spider_dev.cre_Doc_Template_Mgt.Ref_template_types
+  golden_query: SELECT template_type_description FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Ref_template_types
     WHERE template_type_code  =  'AD'
   tables:
   - Ref_template_types
@@ -5543,12 +5543,12 @@ spider_350:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_351:
   query_name: spider_351
   question: Return the template type description of the template type with the code
     AD.
-  golden_query: SELECT template_type_description FROM spider_dev.cre_Doc_Template_Mgt.Ref_template_types
+  golden_query: SELECT template_type_description FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Ref_template_types
     WHERE template_type_code  =  'AD'
   tables:
   - Ref_template_types
@@ -5558,11 +5558,11 @@ spider_351:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_352:
   query_name: spider_352
   question: What is the template type code for template type description 'Book'.
-  golden_query: SELECT template_type_code FROM spider_dev.cre_Doc_Template_Mgt.Ref_template_types
+  golden_query: SELECT template_type_code FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Ref_template_types
     WHERE template_type_description  =  'Book'
   tables:
   - Ref_template_types
@@ -5572,11 +5572,11 @@ spider_352:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_353:
   query_name: spider_353
   question: Return the type code of the template type with the description 'Book'.
-  golden_query: SELECT template_type_code FROM spider_dev.cre_Doc_Template_Mgt.Ref_template_types
+  golden_query: SELECT template_type_code FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Ref_template_types
     WHERE template_type_description  =  'Book'
   tables:
   - Ref_template_types
@@ -5586,14 +5586,14 @@ spider_353:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_354:
   query_name: spider_354
   question: What are the distinct template type descriptions for the templates ever
     used by any document?
-  golden_query: SELECT DISTINCT T1.template_type_description FROM spider_dev.cre_Doc_Template_Mgt.Ref_template_types
-    AS T1 JOIN spider_dev.cre_Doc_Template_Mgt.Templates AS T2 ON T1.template_type_code  =
-    T2.template_type_code JOIN spider_dev.cre_Doc_Template_Mgt.Documents AS T3 ON
+  golden_query: SELECT DISTINCT T1.template_type_description FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Ref_template_types
+    AS T1 JOIN spider_dev.CRE_DOC_TEMPLATE_MGT.Templates AS T2 ON T1.template_type_code  =
+    T2.template_type_code JOIN spider_dev.CRE_DOC_TEMPLATE_MGT.Documents AS T3 ON
     T2.Template_ID  =  T3.template_ID
   tables:
   - Templates
@@ -5605,14 +5605,14 @@ spider_354:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_355:
   query_name: spider_355
   question: Return the different descriptions for templates that have been used in
     a document.
-  golden_query: SELECT DISTINCT T1.template_type_description FROM spider_dev.cre_Doc_Template_Mgt.Ref_template_types
-    AS T1 JOIN spider_dev.cre_Doc_Template_Mgt.Templates AS T2 ON T1.template_type_code  =
-    T2.template_type_code JOIN spider_dev.cre_Doc_Template_Mgt.Documents AS T3 ON
+  golden_query: SELECT DISTINCT T1.template_type_description FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Ref_template_types
+    AS T1 JOIN spider_dev.CRE_DOC_TEMPLATE_MGT.Templates AS T2 ON T1.template_type_code  =
+    T2.template_type_code JOIN spider_dev.CRE_DOC_TEMPLATE_MGT.Documents AS T3 ON
     T2.Template_ID  =  T3.template_ID
   tables:
   - Templates
@@ -5624,12 +5624,12 @@ spider_355:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_356:
   query_name: spider_356
   question: What are the template ids with template type description 'Presentation'.
-  golden_query: SELECT T2.template_id FROM spider_dev.cre_Doc_Template_Mgt.Ref_template_types
-    AS T1 JOIN spider_dev.cre_Doc_Template_Mgt.Templates AS T2 ON T1.template_type_code  =
+  golden_query: SELECT T2.template_id FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Ref_template_types
+    AS T1 JOIN spider_dev.CRE_DOC_TEMPLATE_MGT.Templates AS T2 ON T1.template_type_code  =
     T2.template_type_code WHERE T1.template_type_description  =  'Presentation'
   tables:
   - Templates
@@ -5640,12 +5640,12 @@ spider_356:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_357:
   query_name: spider_357
   question: Return the ids corresponding to templates with the description 'Presentation'.
-  golden_query: SELECT T2.template_id FROM spider_dev.cre_Doc_Template_Mgt.Ref_template_types
-    AS T1 JOIN spider_dev.cre_Doc_Template_Mgt.Templates AS T2 ON T1.template_type_code  =
+  golden_query: SELECT T2.template_id FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Ref_template_types
+    AS T1 JOIN spider_dev.CRE_DOC_TEMPLATE_MGT.Templates AS T2 ON T1.template_type_code  =
     T2.template_type_code WHERE T1.template_type_description  =  'Presentation'
   tables:
   - Templates
@@ -5656,11 +5656,11 @@ spider_357:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_358:
   query_name: spider_358
   question: How many paragraphs in total? Display as num_para.
-  golden_query: SELECT count(*) as num_para FROM spider_dev.cre_Doc_Template_Mgt.Paragraphs
+  golden_query: SELECT count(*) as num_para FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Paragraphs
   tables:
   - Paragraphs
   comparison_rules:
@@ -5669,11 +5669,11 @@ spider_358:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_359:
   query_name: spider_359
   question: Count the number of paragraphs. Display as num_para.
-  golden_query: SELECT count(*) as num_para FROM spider_dev.cre_Doc_Template_Mgt.Paragraphs
+  golden_query: SELECT count(*) as num_para FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Paragraphs
   tables:
   - Paragraphs
   comparison_rules:
@@ -5682,13 +5682,13 @@ spider_359:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_360:
   query_name: spider_360
   question: How many paragraphs for the document with name 'Summer Show'? Display
     as num_para.
-  golden_query: SELECT count(*) as num_para FROM spider_dev.cre_Doc_Template_Mgt.Paragraphs
-    AS T1 JOIN spider_dev.cre_Doc_Template_Mgt.Documents AS T2 ON T1.document_ID  =  T2.document_ID
+  golden_query: SELECT count(*) as num_para FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Paragraphs
+    AS T1 JOIN spider_dev.CRE_DOC_TEMPLATE_MGT.Documents AS T2 ON T1.document_ID  =  T2.document_ID
     WHERE T2.document_name  =  'Summer Show'
   tables:
   - Paragraphs
@@ -5699,13 +5699,13 @@ spider_360:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_361:
   query_name: spider_361
   question: Count the number of paragraphs in the document named 'Summer Show'.Display
     as num_para.
-  golden_query: SELECT count(*) as num_para FROM spider_dev.cre_Doc_Template_Mgt.Paragraphs
-    AS T1 JOIN spider_dev.cre_Doc_Template_Mgt.Documents AS T2 ON T1.document_ID  =  T2.document_ID
+  golden_query: SELECT count(*) as num_para FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Paragraphs
+    AS T1 JOIN spider_dev.CRE_DOC_TEMPLATE_MGT.Documents AS T2 ON T1.document_ID  =  T2.document_ID
     WHERE T2.document_name  =  'Summer Show'
   tables:
   - Paragraphs
@@ -5716,11 +5716,11 @@ spider_361:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_362:
   query_name: spider_362
   question: Show other details for paragraph containing 'korea'.
-  golden_query: select other_details from spider_dev.cre_Doc_Template_Mgt.paragraphs
+  golden_query: select other_details from spider_dev.CRE_DOC_TEMPLATE_MGT.paragraphs
     where paragraph_text ilike 'korea%'
   tables:
   - paragraphs
@@ -5730,11 +5730,11 @@ spider_362:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_363:
   query_name: spider_363
   question: What are other details for the paragraph that includes the text 'Korea'
-  golden_query: select other_details from spider_dev.cre_Doc_Template_Mgt.paragraphs
+  golden_query: select other_details from spider_dev.CRE_DOC_TEMPLATE_MGT.paragraphs
     where paragraph_text ilike 'korea%'
   tables:
   - paragraphs
@@ -5744,13 +5744,13 @@ spider_363:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_364:
   query_name: spider_364
   question: Show all paragraph ids and texts for the document with name 'Welcome to
     NY'.
-  golden_query: SELECT T1.paragraph_id ,   T1.paragraph_text FROM spider_dev.cre_Doc_Template_Mgt.Paragraphs
-    AS T1 JOIN spider_dev.cre_Doc_Template_Mgt.Documents AS T2 ON T1.document_id  =  T2.document_id
+  golden_query: SELECT T1.paragraph_id ,   T1.paragraph_text FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Paragraphs
+    AS T1 JOIN spider_dev.CRE_DOC_TEMPLATE_MGT.Documents AS T2 ON T1.document_id  =  T2.document_id
     WHERE T2.Document_Name  =  'Welcome to NY'
   tables:
   - Paragraphs
@@ -5762,13 +5762,13 @@ spider_364:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_365:
   query_name: spider_365
   question: What are the ids and texts of paragraphs in the document titled 'Welcome
     to NY'?
-  golden_query: SELECT T1.paragraph_id ,   T1.paragraph_text FROM spider_dev.cre_Doc_Template_Mgt.Paragraphs
-    AS T1 JOIN spider_dev.cre_Doc_Template_Mgt.Documents AS T2 ON T1.document_id  =  T2.document_id
+  golden_query: SELECT T1.paragraph_id ,   T1.paragraph_text FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Paragraphs
+    AS T1 JOIN spider_dev.CRE_DOC_TEMPLATE_MGT.Documents AS T2 ON T1.document_id  =  T2.document_id
     WHERE T2.Document_Name  =  'Welcome to NY'
   tables:
   - Paragraphs
@@ -5780,12 +5780,12 @@ spider_365:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_366:
   query_name: spider_366
   question: Show all paragraph texts for the document 'Customer reviews'.
-  golden_query: SELECT T1.paragraph_text FROM spider_dev.cre_Doc_Template_Mgt.Paragraphs
-    AS T1 JOIN spider_dev.cre_Doc_Template_Mgt.Documents AS T2 ON T1.document_id  =  T2.document_id
+  golden_query: SELECT T1.paragraph_text FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Paragraphs
+    AS T1 JOIN spider_dev.CRE_DOC_TEMPLATE_MGT.Documents AS T2 ON T1.document_id  =  T2.document_id
     WHERE T2.document_name  =  'Customer reviews'
   tables:
   - Paragraphs
@@ -5796,13 +5796,13 @@ spider_366:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_367:
   query_name: spider_367
   question: What are the paragraph texts for the document with the name 'Customer
     reviews'?
-  golden_query: SELECT T1.paragraph_text FROM spider_dev.cre_Doc_Template_Mgt.Paragraphs
-    AS T1 JOIN spider_dev.cre_Doc_Template_Mgt.Documents AS T2 ON T1.document_id  =  T2.document_id
+  golden_query: SELECT T1.paragraph_text FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Paragraphs
+    AS T1 JOIN spider_dev.CRE_DOC_TEMPLATE_MGT.Documents AS T2 ON T1.document_id  =  T2.document_id
     WHERE T2.document_name  =  'Customer reviews'
   tables:
   - Paragraphs
@@ -5813,14 +5813,14 @@ spider_367:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_368:
   query_name: spider_368
   question: Show all document ids and the number of paragraphs in each document. Show
     me documents even if there are no paragraphs. Order by document id. Display number
     of paragraphs as num_paragraphs
-  golden_query: select a.document_id, count(paragraph_id) as num_paragraphs from spider_dev.cre_doc_template_mgt.documents
-    a left join spider_dev.cre_doc_template_mgt.paragraphs b on a.document_id=b.document_id  group
+  golden_query: select a.document_id, count(paragraph_id) as num_paragraphs from spider_dev.CRE_DOC_TEMPLATE_MGT.documents
+    a left join spider_dev.CRE_DOC_TEMPLATE_MGT.paragraphs b on a.document_id=b.document_id  group
     by a.document_id order by a.document_id
   tables: []
   comparison_rules:
@@ -5830,14 +5830,14 @@ spider_368:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_369:
   query_name: spider_369
   question: Return the different document ids along with the number of paragraphs
     corresponding to each, ordered by id. Show me documents even if there are no paragraphs.
     Order by document id. Display number of paragraphs as num_paragraphs
-  golden_query: select a.document_id, count(*) as num_paragraphs from spider_dev.cre_doc_template_mgt.documents
-    a left join spider_dev.cre_doc_template_mgt.paragraphs b on a.document_id=b.document_id  group
+  golden_query: select a.document_id, count(*) as num_paragraphs from spider_dev.CRE_DOC_TEMPLATE_MGT.documents
+    a left join spider_dev.CRE_DOC_TEMPLATE_MGT.paragraphs b on a.document_id=b.document_id  group
     by a.document_id order by a.document_id
   tables: []
   comparison_rules:
@@ -5847,13 +5847,13 @@ spider_369:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_370:
   query_name: spider_370
   question: Show all document ids, names and the number of paragraphs in each document.
     Display as num_para.
   golden_query: SELECT T1.document_id ,  T2.document_name ,  count(*) as num_para
-    FROM spider_dev.cre_Doc_Template_Mgt.Paragraphs AS T1 JOIN spider_dev.cre_Doc_Template_Mgt.Documents
+    FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Paragraphs AS T1 JOIN spider_dev.CRE_DOC_TEMPLATE_MGT.Documents
     AS T2 ON T1.document_id  =  T2.document_id GROUP BY T1.document_id ,  T2.document_name
   tables:
   - Paragraphs
@@ -5866,12 +5866,12 @@ spider_370:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_371:
   query_name: spider_371
   question: What are the ids and names of each document, as well as the number of
     paragraphs in each? Display as num_para.
-  golden_query: WITH paragraphcount AS ( SELECT document_id, COUNT(paragraph_id) AS num_para FROM spider_dev.cre_doc_template_mgt.paragraphs GROUP BY document_id ) SELECT d.document_id, document_name, num_para FROM spider_dev.cre_doc_template_mgt.documents AS d LEFT JOIN paragraphcount AS p ON d.document_id = p.document_id
+  golden_query: WITH paragraphcount AS ( SELECT document_id, COUNT(paragraph_id) AS num_para FROM spider_dev.CRE_DOC_TEMPLATE_MGT.paragraphs GROUP BY document_id ) SELECT d.document_id, document_name, num_para FROM spider_dev.CRE_DOC_TEMPLATE_MGT.documents AS d LEFT JOIN paragraphcount AS p ON d.document_id = p.document_id
   tables:
   - Paragraphs
   - Documents
@@ -5883,11 +5883,11 @@ spider_371:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_372:
   query_name: spider_372
   question: List all document ids with at least two paragraphs.
-  golden_query: SELECT document_id FROM spider_dev.cre_Doc_Template_Mgt.Paragraphs
+  golden_query: SELECT document_id FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Paragraphs
     GROUP BY document_id HAVING count(*)  >=  2
   tables:
   - Paragraphs
@@ -5897,11 +5897,11 @@ spider_372:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_373:
   query_name: spider_373
   question: What are the ids of documents that have 2 or more paragraphs?
-  golden_query: SELECT document_id FROM spider_dev.cre_Doc_Template_Mgt.Paragraphs
+  golden_query: SELECT document_id FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Paragraphs
     GROUP BY document_id HAVING count(*)  >=  2
   tables:
   - Paragraphs
@@ -5911,12 +5911,12 @@ spider_373:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_374:
   query_name: spider_374
   question: What is the document id and name with greatest number of paragraphs?
-  golden_query: SELECT T1.document_id ,  T2.document_name FROM spider_dev.cre_Doc_Template_Mgt.Paragraphs
-    AS T1 JOIN spider_dev.cre_Doc_Template_Mgt.Documents AS T2 ON T1.document_id  =  T2.document_id
+  golden_query: SELECT T1.document_id ,  T2.document_name FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Paragraphs
+    AS T1 JOIN spider_dev.CRE_DOC_TEMPLATE_MGT.Documents AS T2 ON T1.document_id  =  T2.document_id
     GROUP BY T1.document_id ,  T2.document_name ORDER BY count(*) DESC LIMIT 1
   tables:
   - Paragraphs
@@ -5928,12 +5928,12 @@ spider_374:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_375:
   query_name: spider_375
   question: Return the id and name of the document with the most paragraphs.
-  golden_query: SELECT T1.document_id ,  T2.document_name FROM spider_dev.cre_Doc_Template_Mgt.Paragraphs
-    AS T1 JOIN spider_dev.cre_Doc_Template_Mgt.Documents AS T2 ON T1.document_id  =  T2.document_id
+  golden_query: SELECT T1.document_id ,  T2.document_name FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Paragraphs
+    AS T1 JOIN spider_dev.CRE_DOC_TEMPLATE_MGT.Documents AS T2 ON T1.document_id  =  T2.document_id
     GROUP BY T1.document_id ,  T2.document_name ORDER BY count(*) DESC LIMIT 1
   tables:
   - Paragraphs
@@ -5945,12 +5945,12 @@ spider_375:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_376:
   query_name: spider_376
   question: What is the document id with least number of paragraphs? Sort by number
     of document_id and show 1 row.
-  golden_query: SELECT document_id FROM spider_dev.cre_Doc_Template_Mgt.Paragraphs
+  golden_query: SELECT document_id FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Paragraphs
     GROUP BY document_id ORDER BY count(*) ASC LIMIT 1
   tables:
   - Paragraphs
@@ -5960,12 +5960,12 @@ spider_376:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_377:
   query_name: spider_377
   question: Return the id of the document with the fewest paragraphs. Sort by number
     of document_id and show 1 row.
-  golden_query: SELECT document_id FROM spider_dev.cre_Doc_Template_Mgt.Paragraphs
+  golden_query: SELECT document_id FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Paragraphs
     GROUP BY document_id ORDER BY count(*) ASC LIMIT 1
   tables:
   - Paragraphs
@@ -5975,11 +5975,11 @@ spider_377:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_378:
   query_name: spider_378
   question: What is the document id with 1 to 2 paragraphs?
-  golden_query: SELECT document_id FROM spider_dev.cre_Doc_Template_Mgt.Paragraphs
+  golden_query: SELECT document_id FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Paragraphs
     GROUP BY document_id HAVING count(*) BETWEEN 1 AND 2
   tables:
   - Paragraphs
@@ -5989,11 +5989,11 @@ spider_378:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_379:
   query_name: spider_379
   question: Give the ids of documents that have between one and two paragraphs.
-  golden_query: SELECT document_id FROM spider_dev.cre_Doc_Template_Mgt.Paragraphs
+  golden_query: SELECT document_id FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Paragraphs
     GROUP BY document_id HAVING count(*) BETWEEN 1 AND 2
   tables:
   - Paragraphs
@@ -6003,12 +6003,12 @@ spider_379:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_380:
   query_name: spider_380
   question: show me document ids which has all of paragraph text 'Brazil' and 'Ireland'
-  golden_query: SELECT document_id FROM spider_dev.cre_Doc_Template_Mgt.Paragraphs
-    WHERE paragraph_text  =  'Brazil' INTERSECT SELECT document_id FROM spider_dev.cre_Doc_Template_Mgt.Paragraphs
+  golden_query: SELECT document_id FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Paragraphs
+    WHERE paragraph_text  =  'Brazil' INTERSECT SELECT document_id FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Paragraphs
     WHERE paragraph_text  =  'Ireland'
   tables:
   - Paragraphs
@@ -6018,13 +6018,13 @@ spider_380:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_381:
   query_name: spider_381
   question: What are the ids of documents that contain all of the paragraph text 'Brazil'
     and 'Ireland'?
-  golden_query: SELECT document_id FROM spider_dev.cre_Doc_Template_Mgt.Paragraphs
-    WHERE paragraph_text  =  'Brazil' INTERSECT SELECT document_id FROM spider_dev.cre_Doc_Template_Mgt.Paragraphs
+  golden_query: SELECT document_id FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Paragraphs
+    WHERE paragraph_text  =  'Brazil' INTERSECT SELECT document_id FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Paragraphs
     WHERE paragraph_text  =  'Ireland'
   tables:
   - Paragraphs
@@ -6034,7 +6034,7 @@ spider_381:
     match: exact
   auto_select_schema: 'false'
   schemas:
-  - cre_Doc_Template_Mgt
+  - CRE_DOC_TEMPLATE_MGT
 spider_382:
   query_name: spider_382
   question: How many teachers are there? Display as num_teachers.

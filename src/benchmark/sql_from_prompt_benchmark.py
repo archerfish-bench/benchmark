@@ -129,7 +129,8 @@ class SQLFromPromptBenchmark(BenchmarkBase):
             response = openai.ChatCompletion.create(
                 model=model,
                 messages=[{"role": "system", "content": "You are a helpful assistant."},
-                          {"role": "user", "content": prompt}]
+                          {"role": "user", "content": prompt}],
+                temperature=0.0
             )
             if response.choices:
                 content = response["choices"][0]["message"]["content"]
@@ -173,6 +174,11 @@ class SQLFromPromptBenchmark(BenchmarkBase):
             result.generation_time = time.time() - stime
             # No need to populate generated table names
             result.generated_query_tables = []
+            if generated_query is not None and generated_query.strip() != "" and query_info['schemas'] is not None:
+                golden_query = query_info['golden_query'].replace('\n', ' ')
+                gen_query = generated_query.replace('\n', ' ')
+                logging.info(f"GoldenQuery: {golden_query}\t{query_info['schemas'][0]}")
+                logging.info(f"GeneratedQuery: {gen_query}")
             return result
         except Exception as ex:
             # Handle other exceptions that may occur during query execution
