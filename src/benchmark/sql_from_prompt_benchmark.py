@@ -10,7 +10,7 @@ import openai
 import sqlalchemy as sa
 
 from base_benchmark import BenchmarkBase, TaskResult
-from src.benchmark.database_connectors import DatabaseConnector
+from benchmark.database_connectors import DatabaseConnector
 
 # Assumption is that you will have OPENAI key in your environment variable
 openai.api_key = os.environ.get('OPENAI_API_KEY')
