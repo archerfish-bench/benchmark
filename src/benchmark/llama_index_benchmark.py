@@ -121,7 +121,7 @@ class LlamaIndexBenchmark(BenchmarkBase):
             traceback.print_exc()
             logging.error(f"Error: {ex}")
             result.is_query_generated = False
-            result.results_comparison_error = str(ex)
+            result.results_comparison_error = "generated_query:" + str(ex)
             return result
 
     @override

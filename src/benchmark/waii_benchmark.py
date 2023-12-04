@@ -112,7 +112,7 @@ class WaiiBenchmark(BenchmarkBase):
             # Handle other exceptions that may occur during query execution
             logging.error(f"Error: {ex}")
             result.is_query_generated = False
-            result.results_comparison_error = str(ex)
+            result.results_comparison_error = "generated_query:" + str(ex)
             return result
 
     def generate_initial_query(self, question, result, search_context):

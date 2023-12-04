@@ -184,6 +184,7 @@ class SQLFromPromptBenchmark(BenchmarkBase):
             # Handle other exceptions that may occur during query execution
             traceback.print_exc()
             logging.error(f"Error: {ex}")
+            logging.info(f"GeneratedQuery: select 1")
             result.is_query_generated = False
-            result.results_comparison_error = str(ex)
+            result.results_comparison_error = "generated_query:" + str(ex)
             return result
