@@ -1,0 +1,7 @@
+psycopg2>=2.8
+pyyaml~=6.0.1
+uuid~=1.30
+sqlalchemy~=1.4.50
+snowflake-sqlalchemy
+snowflake-connector-python==3.1.1
+pandas~=2.1.2

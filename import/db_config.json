@@ -1,0 +1,17 @@
+{
+    "postgres": {
+        "user": "USERNAME",
+        "password": "PASSWORD",
+        "host": "HOSTNAME",
+        "port": "5432",
+        "database": "DB_NAME"
+    },
+    "snowflake": {
+        "user": "USERNAME",
+        "password": "PASSWORD",
+        "account": "ACCOUNT_NAME",
+        "warehouse": "WAREHOUSE_NAME",
+        "database": "DB_NAME",
+        "role": "ACCOUNTADMIN"
+    }
+}
