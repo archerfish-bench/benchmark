@@ -96,55 +96,8 @@ actual = [
     {"C1": "USA", "C2": "US", "C3": 331002651, "C4": 80.1},
     {"C1": "CANADA", "C2": "CA", "C3": 37742154, "C4": 75.1}
 ]
-
-I have the following Python program:
-
-```python
-def compare_results(expected, actual, comparison_rules):
-    if len(expected) != len(actual):
-        return False, "Number of rows are different"
-
-    def match_rule(rule, expected_row, actual_row):
-        if rule["match"] == "exact":
-            for column in rule["columns"]:
-                if expected_row[column] is None:
-                    if actual_row.get(column) is not None:
-                        return False
-                elif isinstance(expected_row[column], str):
-                    if expected_row[column] != actual_row.get(column):
-                        return False
-                elif isinstance(expected_row[column], (int, float)):
-                    if actual_row.get(column) is None or abs(expected_row[column] - actual_row.get(column, 0)) > 0.001:
-                        return False
-        elif rule["match"] == "oneof":
-            for column in rule["columns"]:
-                if expected_row[column] == actual_row.get(column):
-                    break
-            else:
-                return False
-        return True
-
-    for expected_row in expected:
-        for actual_row in actual:
-            for rule in comparison_rules:
-                if not match_rule(rule, expected_row, actual_row):
-                    break
-            else:
-                actual.remove(actual_row)
-                break
-        else:
-            return False, f"Comparison failed for row: {expected_row}"
-    return True, ""
-
-```
-
-You need help to fix it, there're some issues:
-- It assume column names are same for expected and actual, it can be very different, you need to handle that (copy actual row during match, removing the matched columns from copied row if it matches)
-
-Output (only produce Python program):
 """
 import decimal
-import json
 import logging
 from typing import Optional
 
@@ -154,36 +107,20 @@ def compare_results(expected, actual, comparison_rules, intent_based_match: bool
                     target_db_type: Optional[str] = None):
     if not intent_based_match:
         return compare_exact_match(expected, actual)
-    # make a copy of expected
-    expected = expected.copy()
-    # make a copy of actual
-    actual = actual.copy()
-    # make a copy of comparison_rules
-    if comparison_rules:
-        comparison_rules = comparison_rules.copy()
-    new_expected = []
-    # for key in expected, convert the key to lower case
-    for row in expected:
-        # create a new dict
-        new_row = {}
-        for key in row:
-            v = row[key]
-            new_row[key.lower()] = v
-        # replace the row with new_row
-        new_expected.append(new_row)
-    expected = new_expected
 
-    new_actual = []
-    # for key in actual, convert the key to lower case
-    for row in actual:
-        # create a new dict
-        new_row = {}
-        for key in row:
-            v = row[key]
-            new_row[key.lower()] = v
-        # replace the row with new_row
-        new_actual.append(new_row)
-    actual = new_actual
+    # Function to remove leading and trailing quotes
+    def remove_quotes(string):
+        if isinstance(string, str):
+            return string.strip('"')
+        return string
+
+    # Convert all keys in expected and actual to lowercase for case-insensitive comparison
+    expected = [{(k.lower() if k is not None else None): v for k, v in row.items()} for row in expected]
+    actual = [{(k.lower() if k is not None else None): v for k, v in row.items()} for row in actual]
+
+    # Remove quotes in string values in expected and actual
+    expected = [{k: remove_quotes(v) for k, v in row.items()} for row in expected]
+    actual = [{k: remove_quotes(v) for k, v in row.items()} for row in actual]
 
     # for each rules of comparison_rules, convert the columns to lower case
     if comparison_rules:
@@ -229,104 +166,52 @@ def compare_results(expected, actual, comparison_rules, intent_based_match: bool
 
 
     if len(expected) != len(actual):
-        if target_db_type is not None and target_db_type == "mongo" and len(expected) < len(actual):
-            pass
-        else:
-            return False, f"Number of rows are different, example: exp={expected[0] if len(expected) > 0 else 'null'}, act={actual[0] if len(actual) > 0 else 'null'}, #exp={len(expected)}, #act={len(actual)}"
+        return False, (f"Number of rows are different, example: exp={expected[0] if len(expected) > 0 else 'null'}, "
+                       f"act={actual[0] if len(actual) > 0 else 'null'}, #exp={len(expected)}, #act={len(actual)}")
 
     def match_rule(rule, expected_row, actual_row):
+        def is_match(expected_val, actual_val):
+            '''
+            This function compares expected_val and actual_val with relevant datatype conversion
+            '''
+            if ((expected_val is None or expected_val == 0) and
+                    (actual_val is None or actual_val == 0)):
+                return True
+            elif (isinstance(expected_val, (int, float, decimal.Decimal))
+                  and isinstance(actual_val, (int, float, decimal.Decimal))):
+                return actual_val is not None and (str(round(expected_val, 1)) == str(round(actual_val, 1)))
+            elif isinstance(expected_val, str) and isinstance(actual_val, str):
+                return str(actual_val) == expected_val
+            elif isinstance(expected_val, str) and isinstance(actual_val, (int, float)):
+                return expected_val == str(actual_val)
+            elif isinstance(expected_val, (int, float)) and isinstance(actual_val, str):
+                return str(expected_val) == actual_val
+            elif isinstance(expected_val, (int, float)) and isinstance(actual_val, (int, float)):
+                return (actual_val is not None) and (
+                        round(expected_val, 0) == round(actual_val, 0))
+            else:
+                return str(expected_val) == str(actual_val)
+
+
         if rule["match"] == "exact":
             if '*' in rule["columns"]:
                 columns_to_compare = expected_row.keys()
             else:
                 columns_to_compare = rule["columns"]
-
             for column in columns_to_compare:
-                matched = False
-                expected_value = None
-                if column in expected_row:
-                    expected_value = expected_row[column]
-                elif "*" in expected_row:
-                    expected_value = expected_row["*"]
-                else:
-                    return False
-                for key in actual_row.keys():
-                    if ((expected_value is None or expected_value == 0) and
-                            (actual_row[key] is None or actual_row[key] == 0)):
-                        matched = True
-                        del actual_row[key]
-                        break
-                    elif isinstance(expected_value, (int, float, decimal.Decimal)) and isinstance(actual_row[key], (int, float, decimal.Decimal)):
-                        if actual_row[key] is not None and (
-                                str(round(expected_value, 1)) == str(round(actual_row[key], 1))):
-                            matched = True
-                            del actual_row[key]
-                            break
-                    elif isinstance(expected_value, str) and isinstance(actual_row[key], str):
-                        if expected_value == actual_row[key]:
-                            matched = True
-                            del actual_row[key]
-                            break
-                    elif isinstance(expected_row[column], str) and isinstance(actual_row[key], (int, float)):
-                        if expected_row[column] == str(actual_row[key]):
-                            matched = True
-                            del actual_row[key]
-                            break
-                    elif isinstance(expected_row[column], (int, float)) and isinstance(actual_row[key], str):
-                        if str(expected_row[column]) == actual_row[key]:
-                            matched = True
-                            del actual_row[key]
-                            break
-                    elif isinstance(expected_value, (int, float)) and isinstance(actual_row[key], (int, float)):
-                        if actual_row[key] is not None and (
-                                round(expected_value, 0) == round(actual_row[key], 0)):
-                            matched = True
-                            del actual_row[key]
-                            break
-                    else:
-                        # convert both to string and compare
-                        if str(expected_row[column]) == str(actual_row[key]):
-                            matched = True
-                            del actual_row[key]
-                            break
-                if not matched:
+                column_matched = any(is_match(expected_row[column], actual_val) for actual_val in actual_row.values())
+                if not column_matched:
                     return False
             return True
+
         elif rule["match"] == "oneof":
             for column in rule["columns"]:
-                expected_value = None
-                if column in expected_row:
-                    expected_value = expected_row[column]
-                elif "*" in expected_row:
-                    expected_value = expected_row["*"]
                 for key in actual_row.keys():
-                    if ((expected_value is None or expected_value == 0) and
-                            (actual_row[key] is None or actual_row[key] == 0)):
+                    expected_value = expected_row[column]
+                    actual_value = actual_row[key]
+                    if is_match(expected_value, actual_value):
                         del actual_row[key]
                         return True
-                    elif isinstance(expected_value, (int, float, decimal.Decimal)) and isinstance(actual_row[key], (int, float, decimal.Decimal)):
-                        if actual_row[key] is not None and (
-                                str(round(expected_value, 1)) == str(round(actual_row[key], 1))):
-                            del actual_row[key]
-                            return True
-                            break
-                    elif isinstance(expected_value, str) and isinstance(actual_row[key], str):
-                        if expected_value == actual_row[key]:
-                            del actual_row[key]
-                            return True
-                            break
-                    elif isinstance(expected_value, (int, float)) and isinstance(actual_row[key], (int, float)):
-                        if actual_row[key] is not None and (
-                                str(round(expected_value, 0)) == str(round(actual_row[key], 0))):
-                            del actual_row[key]
-                            return True
-                            break
-                    else:
-                        # convert both to string and compare
-                        if str(expected_row[column]) == str(actual_row[key]):
-                            del actual_row[key]
-                            return True
-                            break
             return False
 
     for expected_row in expected:

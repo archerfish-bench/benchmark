@@ -37,6 +37,124 @@ class TestCompareResults(unittest.TestCase):
         rules = [{'match': 'exact', 'columns': ['a', 'b']}]
         self.assertEqual(compare_results(expected, actual, rules), (True, ""))
 
+    def test_compare_exact_match_case_sensitive_key(self):
+        expected = [{'a': 1, 'b': 'test'}]
+        actual = [{'a': 1, 'B': 'test'}]
+        rules = [{'match': 'exact', 'columns': ['a', 'b']}]
+        self.assertEqual(compare_results(expected, actual, rules), (True, ""))
+
+    def test_compare_with_quotes(self):
+        expected = [{'a': 1, 'b': '"test"'}]
+        actual = [{'a': 1, 'B': 'test'}]
+        rules = [{'match': 'exact', 'columns': ['a', 'b']}]
+        self.assertEqual(compare_results(expected, actual, rules), (True, ""))
+
+        expected = [{'a': 1, 'b': '"test'}]
+        actual = [{'a': 1, 'B': 'test'}]
+        rules = [{'match': 'exact', 'columns': ['a', 'b']}]
+        self.assertEqual(compare_results(expected, actual, rules), (True, ""))
+
+        expected = [{'a': 1, 'b': 'test"'}]
+        actual = [{'a': 1, 'B': 'test'}]
+        rules = [{'match': 'exact', 'columns': ['a', 'b']}]
+        self.assertEqual(compare_results(expected, actual, rules), (True, ""))
+
+        expected = [{'a': 1, 'b': '""'}]
+        actual = [{'a': 1, 'B': ''}]
+        rules = [{'match': 'exact', 'columns': ['a', 'b']}]
+        self.assertEqual(compare_results(expected, actual, rules), (True, ""))
+
+        expected = [{'a': 1, 'b': ' '}]
+        actual = [{'a': 1, 'B': ''}]
+        rules = [{'match': 'exact', 'columns': ['a', 'b']}]
+        self.assertNotEquals(compare_results(expected, actual, rules), (True, ""))
+
+    def test_mix_of_exact_oneof_a(self):
+        expected = [
+            {"COUNTRY_NAME": "USA", "COUNTRY_CODE": "US", "population": 331002651,
+             "official_language_percentage": 80.2},
+            {"COUNTRY_NAME": "CANADA", "COUNTRY_CODE": "CA", "population": 37742154,
+             "official_language_percentage": 75.2}
+        ]
+
+        actual = [
+            {"C1": "USA1", "C2": "US", "C3": 331002651, "C4": 80.199},
+            {"C1": "CANADA1", "C2": "CA", "C3": 37742154, "C4": 75.199}
+        ]
+
+        rules = [
+            {"columns": ["official_language_percentage", "population"], "match": "exact"},
+            {"columns": ["COUNTRY_NAME", "COUNTRY_CODE"], "match": "oneof"}
+        ]
+
+        self.assertEqual(compare_results(expected, actual, rules), (True, ""))
+
+        rules = [
+            {"columns": ["official_language_percentage", "population"], "match": "exact"},
+            {"columns": ["COUNTRY_NAME", "COUNTRY_CODE"], "match": "exact"}
+        ]
+
+        self.assertNotEquals(compare_results(expected, actual, rules), (True, ""))
+
+    def test_mix_of_exact_oneof_b(self):
+        expected = [
+            {"COUNTRY_NAME": "USA", "COUNTRY_CODE": "US", "population": 331002651,
+             "official_language_percentage": 80.2},
+            {"COUNTRY_NAME": "CANADA", "COUNTRY_CODE": "CA", "population": 37742154,
+             "official_language_percentage": 75.2}
+        ]
+
+        actual = [
+            {"C1": "USA", "C2": "Different_Code", "C3": 331002651, "C4": 80.199},
+            {"C1": "CANADA", "C2": "Different_Code", "C3": 37742154, "C4": 75.199}
+        ]
+
+        rules = [
+            {"columns": ["COUNTRY_NAME", "COUNTRY_CODE"], "match": "oneof"}
+        ]
+
+        self.assertEqual(compare_results(expected, actual, rules), (True, ""))
+
+    def test_mix_of_exact_oneof_c(self):
+        expected = [
+            {"COUNTRY_NAME": "USA", "COUNTRY_CODE": "US", "population": 331002651,
+             "official_language_percentage": 80.2},
+            {"COUNTRY_NAME": "CANADA", "COUNTRY_CODE": "CA", "population": 37742154,
+             "official_language_percentage": 75.2}
+        ]
+
+        actual = [
+            {"C1": "Different_Country", "C2": "Different_Code", "C3": 331002651, "C4": 80.199},
+            {"C1": "Different_Country", "C2": "Different_Code", "C3": 37742154, "C4": 75.199}
+        ]
+
+        # one of should fail
+        rules = [
+            {"columns": ["COUNTRY_NAME", "COUNTRY_CODE"], "match": "oneof"}
+        ]
+
+        self.assertNotEquals(compare_results(expected, actual, rules), (True, ""))
+
+
+    def test_mix_of_exact_d(self):
+        expected = [
+            {"COUNTRY_NAME": "USA", "COUNTRY_CODE": "US", "population": 331002651,
+             "official_language_percentage": 80.1},
+            {"COUNTRY_NAME": "CANADA", "COUNTRY_CODE": "CA", "population": 37742154,
+             "official_language_percentage": 75.1}
+        ]
+
+        actual = [
+            {"C1": "USA", "C2": "US", "C3": 331002651, "C4": 80.1},
+            {"C1": "CANADA", "C2": "CA", "C3": 37742154, "C4": 75.1}
+        ]
+
+        rules = [
+            {"columns": ["official_language_percentage", "population"], "match": "exact"}
+        ]
+
+        self.assertEqual(compare_results(expected, actual, rules), (True, ""))
+
     def test_compare_exact_match_with_duplicates(self):
         """
             Different length, rows are same.
