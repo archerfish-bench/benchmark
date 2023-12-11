@@ -11,7 +11,7 @@ These JSON arraries are from database, I want to do the comparison with the foll
 4. column name (keys) is not matter, so don't compare with the column name.
 5. column order doesn't matter.
 6. Should compare string to string, number to number (could float to int).
-7. when compare with two numbers, episilon should be 0.001
+7. For decimal, round off to 1 decimal place.
 
 As part of the comparison, you will receive a rules object, looks like:
 
@@ -169,30 +169,29 @@ def compare_results(expected, actual, comparison_rules, intent_based_match: bool
         return False, (f"Number of rows are different, example: exp={expected[0] if len(expected) > 0 else 'null'}, "
                        f"act={actual[0] if len(actual) > 0 else 'null'}, #exp={len(expected)}, #act={len(actual)}")
 
+    def is_match(expected_val, actual_val):
+        '''
+        This function compares expected_val and actual_val with relevant datatype conversion
+        '''
+        if ((expected_val is None or expected_val == 0) and
+                (actual_val is None or actual_val == 0)):
+            return True
+        elif (isinstance(expected_val, (int, float, decimal.Decimal))
+              and isinstance(actual_val, (int, float, decimal.Decimal))):
+            return actual_val is not None and (str(round(expected_val, 1)) == str(round(actual_val, 1)))
+        elif isinstance(expected_val, str) and isinstance(actual_val, str):
+            return str(actual_val) == expected_val
+        elif isinstance(expected_val, str) and isinstance(actual_val, (int, float)):
+            return expected_val == str(actual_val)
+        elif isinstance(expected_val, (int, float)) and isinstance(actual_val, str):
+            return str(expected_val) == actual_val
+        elif isinstance(expected_val, (int, float)) and isinstance(actual_val, (int, float)):
+            return (actual_val is not None) and (
+                    round(expected_val, 0) == round(actual_val, 0))
+        else:
+            return str(expected_val) == str(actual_val)
+
     def match_rule(rule, expected_row, actual_row):
-        def is_match(expected_val, actual_val):
-            '''
-            This function compares expected_val and actual_val with relevant datatype conversion
-            '''
-            if ((expected_val is None or expected_val == 0) and
-                    (actual_val is None or actual_val == 0)):
-                return True
-            elif (isinstance(expected_val, (int, float, decimal.Decimal))
-                  and isinstance(actual_val, (int, float, decimal.Decimal))):
-                return actual_val is not None and (str(round(expected_val, 1)) == str(round(actual_val, 1)))
-            elif isinstance(expected_val, str) and isinstance(actual_val, str):
-                return str(actual_val) == expected_val
-            elif isinstance(expected_val, str) and isinstance(actual_val, (int, float)):
-                return expected_val == str(actual_val)
-            elif isinstance(expected_val, (int, float)) and isinstance(actual_val, str):
-                return str(expected_val) == actual_val
-            elif isinstance(expected_val, (int, float)) and isinstance(actual_val, (int, float)):
-                return (actual_val is not None) and (
-                        round(expected_val, 0) == round(actual_val, 0))
-            else:
-                return str(expected_val) == str(actual_val)
-
-
         if rule["match"] == "exact":
             if '*' in rule["columns"]:
                 columns_to_compare = expected_row.keys()
