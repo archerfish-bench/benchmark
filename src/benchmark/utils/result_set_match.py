@@ -159,8 +159,8 @@ def compare_results(expected, actual, comparison_rules, intent_based_match: bool
 
         # Proceed with de-dup only when expected and actual cols are same
         if expected_cols == actual_cols:
-            expected = remove_duplicates(expected, cols)
-            actual = remove_duplicates(actual, cols)
+            expected = remove_duplicates(expected, (cols if cols != ['*'] else expected_cols))
+            actual = remove_duplicates(actual, (cols if cols != ['*'] else actual_cols))
         else:
             logging.info("Expected and actual columns are different, skipping de-duplication in results")
 
@@ -198,9 +198,14 @@ def compare_results(expected, actual, comparison_rules, intent_based_match: bool
             else:
                 columns_to_compare = rule["columns"]
             for column in columns_to_compare:
-                column_matched = any(is_match(expected_row[column], actual_val) for actual_val in actual_row.values())
-                if not column_matched:
-                    return False
+                if column in actual_row:
+                    if not is_match(expected_row[column], actual_row[column]):
+                        return False
+                else:
+                    column_matched = any(
+                        is_match(expected_row[column], actual_val) for actual_val in actual_row.values())
+                    if not column_matched:
+                        return False
             return True
 
         elif rule["match"] == "oneof":

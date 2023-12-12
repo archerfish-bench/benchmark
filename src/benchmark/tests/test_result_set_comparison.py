@@ -165,6 +165,27 @@ class TestCompareResults(unittest.TestCase):
         rules = [{'match': 'exact', 'columns': ['a', 'b']}]
         self.assertEqual(compare_results(expected, actual, rules), (True, ""))
 
+    def test_with_real_data(self):
+        actual = [{'employee_id': 2, 'start_from': '2003', 'shop_id': 1, 'is_full_time': 'T'},
+                  {'employee_id': 7, 'start_from': '2008', 'shop_id': 6, 'is_full_time': 'T'},
+                  {'employee_id': 1, 'start_from': '2009', 'shop_id': 1, 'is_full_time': 'T'},
+                  {'employee_id': 6, 'start_from': '2010', 'shop_id': 2, 'is_full_time': 'F'},
+                  {'employee_id': 3, 'start_from': '2011', 'shop_id': 8, 'is_full_time': 'F'},
+                  {'employee_id': 4, 'start_from': '2012', 'shop_id': 4, 'is_full_time': 'T'},
+                  {'employee_id': 5, 'start_from': '2013', 'shop_id': 5, 'is_full_time': 'T'}]
+        expected = [{'shop_id': 1, 'employee_id': 1, 'start_from': '2009', 'is_full_time': 'T'},
+                    {'shop_id': 1, 'employee_id': 2, 'start_from': '2003', 'is_full_time': 'T'},
+                    {'shop_id': 8, 'employee_id': 3, 'start_from': '2011', 'is_full_time': 'F'},
+                    {'shop_id': 4, 'employee_id': 4, 'start_from': '2012', 'is_full_time': 'T'},
+                    {'shop_id': 5, 'employee_id': 5, 'start_from': '2013', 'is_full_time': 'T'},
+                    {'shop_id': 2, 'employee_id': 6, 'start_from': '2010', 'is_full_time': 'F'},
+                    {'shop_id': 6, 'employee_id': 7, 'start_from': '2008', 'is_full_time': 'T'}]
+        rules = [{'columns': ['*'], 'match': 'exact'}]
+        self.assertEqual((True, ""), compare_results(expected, actual, rules))
+
+        rules = [{'columns': ['shop_id'], 'match': 'exact'}]
+        self.assertEqual((True, ""), compare_results(expected, actual, rules))
+
     def test_compare_exact_no_match(self):
         expected = [{'a': 1, 'b': 'test'}]
         actual = [{'a': 2, 'b': 'test'}]
