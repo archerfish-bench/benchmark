@@ -18,6 +18,10 @@ def add_contexts(config: dict):
     context_file = config.get(WAII_CONTEXT)
     if context_file is not None:
         context_file_path = get_context_file_path(context_file)
+        # check if it is absolute path
+        if os.path.exists(context_file):
+            context_file_path = context_file
+            print(f"Using context file {context_file_path}")
         if os.path.exists(context_file_path):
             with open(context_file_path, 'r') as f:
                 sem_context_array = json.load(f)
@@ -31,6 +35,7 @@ def add_contexts(config: dict):
                 response = WAII.SemanticContext.modify_semantic_context(
                     ModifySemanticContextRequest(updated=statements))
                 logging.info(f"Added {len(response.updated)} contexts")
+                print(f"Added {len(response.updated)} contexts")
         else:
             print(f"Context file {context_file_path} does not exist. Skipping adding contexts.")
 
