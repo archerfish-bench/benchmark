@@ -3,7 +3,7 @@ import os
 import time
 import traceback
 from abc import abstractmethod
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Optional
 from urllib.parse import quote_plus
 
@@ -158,7 +158,7 @@ class BenchmarkBase:
         errors = 0
         with tqdm(total=len(futures), unit="task", dynamic_ncols=True, desc="Processing Tasks") as pbar:
             try:
-                for future in futures:
+                for future in as_completed(futures):
                     task_result = future.result()  # Wait for each task to complete
                     self.task_results.append(task_result)
                     if not task_result.is_results_comparison_fine:
