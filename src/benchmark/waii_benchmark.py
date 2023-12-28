@@ -86,20 +86,21 @@ class WaiiBenchmark(BenchmarkBase):
             # If there are tweaks in payload, generate tweaked queries as well
             if 'tweaks' in query_info and query_info[TWEAKS] is not None:
                 previous_sql = gen_query
+                tweaks = [Tweak(sql=previous_sql, ask=question)]
                 for tweak in query_info[TWEAKS]:
-                    logging.info(f"Generating Tweak for {query_name}: {tweak}")
+                    logging.info(f"Generating Tweak for {query_name}: {tweak}, gen_query: {gen_query}")
                     tweak_request = QueryGenerationRequest(uuid=query_id,
                                                            search_context=search_context,
-                                                           ask=question,
+                                                           ask=tweak,
                                                            dialect='snowflake',
-                                                           tweak_history=[Tweak(sql=previous_sql, ask=tweak)]
+                                                           tweak_history=tweaks
                                                            )
                     (gen_query_time, gen_query, tables) = generate_query(question=tweak, request=tweak_request)
                     logging.info(f"Query {query_name} after tweak: {gen_query}")
                     result.generation_time = gen_query_time
                     result.generated_query = gen_query
                     result.generated_query_tables = tables
-                    previous_sql = gen_query
+                    tweaks.append(Tweak(sql=gen_query, ask=tweak))
 
             return result
         except yaml.YAMLError as e:
