@@ -6,7 +6,7 @@ flights_1:
   - columns:
     - delaytype
     - avgdelay
-    match: oneof
+    match: exact
   auto_select_schema: 'false'
   schemas:
   - flights
@@ -24,8 +24,8 @@ flights_2:
   - flights
 flights_3:
   query_name: flights_3
-  question: Do older planes suffer more arrival delays? Display unique plane_year and avg_delay_per_year.
-  golden_query: WITH planeage AS (     SELECT         tailnum,         year     FROM tweakit_perf_db.flights.planedata ),  avgdelay AS (     SELECT         tailnum,         AVG(arrdelay) AS average_delay     FROM tweakit_perf_db.flights.flightperformance     GROUP BY         tailnum )  SELECT     year AS plane_year,     AVG(average_delay) AS avg_delay_per_year FROM planeage AS pa INNER JOIN avgdelay AS ad     ON pa.tailnum = ad.tailnum GROUP BY     year ORDER BY     year
+  question: Do older planes suffer more arrival delays? Consider arrival and departure delays. Average delay should be computed as the sum of arrival delay and departure delay. It should not be computed as the average of two values. Display unique plane_year and avg_delay_per_year.
+  golden_query: WITH planedelays AS ( SELECT tailnum, AVG(arrdelay + depdelay) AS avg_delay FROM tweakit_perf_db.flights.flightperformance AS fp GROUP BY tailnum ), planeyears AS ( SELECT DISTINCT tailnum, year AS plane_year FROM tweakit_perf_db.flights.planedata AS pd ) SELECT plane_year, AVG(avg_delay) AS avg_delay_per_year FROM planedelays AS pd INNER JOIN planeyears AS py ON pd.tailnum = py.tailnum GROUP BY plane_year ORDER BY plane_year
   comparison_rules:
   - columns:
     - plane_year
@@ -53,7 +53,7 @@ flights_4:
   - flights
 flights_5:
   query_name: flights_5
-  question: Show me the flight delays by carrier and month. Consider both arrival and departure delays. Display as carrier, description, month, average_delay Show 100 rows.
+  question: Show me the flight delays by carrier and month. Consider both arrival and departure delays. Average delay should be computed as the sum of arrival delay and departure delay. It should not be computed as the average of two values. Display as carrier, description, month, average_delay. Show 100 rows.
   golden_query: WITH carrierdelays AS (     SELECT         uniquecarrier,         month,         AVG(arrdelay + depdelay) AS average_delay     FROM tweakit_perf_db.flights.flightperformance AS fp     GROUP BY         uniquecarrier,         month )  SELECT     uniquecarrier as carrier,     description,     month,     average_delay FROM carrierdelays AS cd INNER JOIN tweakit_perf_db.flights.carriers AS c     ON uniquecarrier = code ORDER BY     uniquecarrier,     month limit 100
   comparison_rules:
   - columns:
@@ -78,7 +78,7 @@ flights_6:
   - flights
 flights_7:
   query_name: flights_7
-  question: What are the aircraft types that are most prone to delays (e.g arrival delay, departure delay, carrier delay, weather delay, nasdelay, security delay, carrier delay)? Display as type. Display top 1 row.
+  question: What are the aircraft types that are most prone to delays (i.e sum of arrival delay, departure delay, carrier delay, weather delay, nasdelay, security delay, carrier delay)? Display as type. Display top 1 row.
   golden_query: select p.aircraft_type as type, sum(arrdelay + depdelay + carrierdelay + weatherdelay + nasdelay + securitydelay + lateaircraftdelay) as total_delay from flightperformance as fp  inner join planedata as p on p.tailnum = fp.tailnum group by p.aircraft_type order by total_delay desc limit 1
   comparison_rules:
   - columns:
@@ -114,8 +114,8 @@ flights_9:
   - flights
 flights_10:
   query_name: flights_10
-  question: What are the monthly trend of average delays for the carriers? Display as carrier, month and avgDelay.
-  golden_query: select UNIQUECARRIER as carrier, month, avg(ARRDELAY + depdelay) as avgDelay from FLIGHTPERFORMANCE group by uniquecarrier, month order by avgDelay desc
+  question: What are the monthly trend of average delays for the carriers? Include both arrival and departure delays. Average delay should be computed as the sum of arrival delay and departure delay. It should not be computed as the average of two values. Display as carrier, month and avgDelay.
+  golden_query: select UNIQUECARRIER as carrier, month, avg(ARRDELAY + depdelay) as avgDelay from tweakit_perf_db.flights.FLIGHTPERFORMANCE group by uniquecarrier, month order by avgDelay desc
   comparison_rules:
   - columns:
     - month
@@ -139,7 +139,7 @@ flights_11:
   - flights
 flights_12:
   query_name: flights_12
-  question: What is the yearly change in flight volumes for each carrier? Display as uniquecarrier, year, this_year_vol, yearly_change.
+  question: What is the yearly change in flight volumes for each carrier? Include cases where previous year volume is null as well. Display as uniquecarrier, year, this_year_vol, yearly_change.
   golden_query: select uniquecarrier, year, this_year_vol, (this_year_vol - prev_year_vol) as yearly_change from (select UNIQUECARRIER, year, count(*) as this_year_vol, LAG(count(*)) OVER(PARTITION BY UNIQUECARRIER ORDER BY YEAR) as prev_year_vol from FLIGHTPERFORMANCE group by uniquecarrier, year);
   comparison_rules:
     - columns:
@@ -153,8 +153,8 @@ flights_12:
     - flights
 flights_13:
   query_name: flights_13
-  question: What are the top 5 busiest travel days of the year? Display as year, month, dayofmonth, total_flights.
-  golden_query: select year, month, dayofmonth, count(*) as total_flights from FLIGHTPERFORMANCE group by year, month, dayofmonth order by total_flights desc limit 5;
+  question: What are the top 5 busiest airports of the year? Consider departure and arrival of flights. Display as airports, total_traffic.
+  golden_query: WITH departuretraffic AS ( SELECT origin AS airport, COUNT(*) AS departures FROM tweakit_perf_db.flights.flightperformance GROUP BY origin ), arrivaltraffic AS ( SELECT dest AS airport, COUNT(*) AS arrivals FROM tweakit_perf_db.flights.flightperformance GROUP BY dest ), totaltraffic AS ( SELECT COALESCE(d.airport, a.airport) AS airport, COALESCE(departures, 0) + COALESCE(arrivals, 0) AS total_traffic FROM departuretraffic AS d FULL OUTER JOIN arrivaltraffic AS a ON d.airport = a.airport ) SELECT airport, total_traffic FROM totaltraffic ORDER BY total_traffic DESC LIMIT 5
   comparison_rules:
     - columns:
         - '*'
@@ -164,7 +164,7 @@ flights_13:
     - flights
 flights_14:
   query_name: flights_14
-  question: How have flight volumes and delays (arrival delay and depature delays) changed Year-over-Year for each Carrier? Display uniquecarrier, year, this_year_vol, yearly_change, yaerly_change_delay.
+  question: How have flight volumes and delays (arrival delay and depature delays) changed Year-over-Year for each Carrier? Average delay should be computed as the sum of arrival delay and departure delay. It should not be computed as the average of two values. Display uniquecarrier, year, this_year_vol, yearly_change, yaerly_change_delay.
   golden_query: SELECT UNIQUECARRIER, YEAR, THIS_YEAR_VOL, (THIS_YEAR_VOL - PREV_YEAR_VOL) AS YEARLY_CHANGE, (THIS_YEAR_DELAY - PREV_YEAR_AVG_DELAY) AS YEARLY_CHANGE_DELAY FROM (SELECT UNIQUECARRIER, YEAR, COUNT(*) AS THIS_YEAR_VOL, LAG(COUNT(*)) OVER(PARTITION BY UNIQUECARRIER ORDER BY YEAR) AS PREV_YEAR_VOL, AVG(ARRDELAY + DEPDELAY) AS THIS_YEAR_DELAY, LAG(AVG(ARRDELAY + DEPDELAY)) OVER (PARTITION BY UNIQUECARRIER ORDER BY YEAR) AS PREV_YEAR_AVG_DELAY FROM FLIGHTPERFORMANCE GROUP BY UNIQUECARRIER, YEAR);
   comparison_rules:
     - columns:
@@ -180,6 +180,67 @@ flights_15:
   comparison_rules:
     - columns:
         - total_cancelled
+      match: exact
+  auto_select_schema: 'false'
+  schemas:
+    - flights
+flights_16:
+  query_name: flights_16
+  question: Are there specific months or seasons with higher cancellation rates? Sort by cancellation rates?
+  golden_query: WITH monthlycancellation AS ( SELECT month, COUNT(*) AS total_flights, SUM(CASE WHEN cancelled = 1 THEN 1 ELSE 0 END) AS cancelled_flights FROM tweakit_perf_db.flights.flightperformance GROUP BY month ), cancellationrates AS ( SELECT month, ( cancelled_flights * 100.0 ) / NULLIF(total_flights, 0) AS cancellation_rate FROM monthlycancellation ) SELECT month, cancellation_rate FROM cancellationrates ORDER BY cancellation_rate DESC
+  comparison_rules:
+    - columns:
+        - month
+        - cancellation_rate
+      match: exact
+  auto_select_schema: 'false'
+  schemas:
+    - flights
+flights_17:
+  query_name: flights_17
+  question: What times of day have the highest number of arrival delays? Do not include departure delays. Display as hourofday, num_delays
+  golden_query: SELECT LPAD(CAST(crsarrtime / 100 AS INT), 2, '0') AS hourofday, count(arrdelay) AS num_delays FROM tweakit_perf_db.flights.flightperformance AS fp WHERE arrdelay > 0 GROUP BY LPAD(CAST(crsarrtime / 100 AS INT), 2, '0') ORDER BY num_delays DESC
+  comparison_rules:
+    - columns:
+        - hourofday
+        - num_delays
+      match: exact
+  auto_select_schema: 'false'
+  schemas:
+    - flights
+flights_18:
+  query_name: flights_18
+  question: Are there specific state or country destinations that experience more delays? Display as state, country, average_delay.
+  golden_query: WITH destinationdelays AS ( SELECT dest, AVG(arrdelay) AS avg_delay FROM tweakit_perf_db.flights.flightperformance GROUP BY dest ), statecountrydelays AS ( SELECT state, country, avg_delay FROM destinationdelays AS d INNER JOIN tweakit_perf_db.flights.airports AS a ON dest = iata ) SELECT state, country, AVG(avg_delay) AS average_delay FROM statecountrydelays AS sc GROUP BY state, country ORDER BY average_delay DESC
+  comparison_rules:
+    - columns:
+        - state
+        - country
+        - total_delays
+      match: exact
+  auto_select_schema: 'false'
+  schemas:
+    - flights
+flights_19:
+  query_name: flights_19
+  question: Which carriers have the best on-time performance? Include arrival and departure delays. Display as carrier name and performance_rank
+  golden_query: WITH carrierperformance AS ( SELECT uniquecarrier, AVG(arrdelay) AS avg_arrival_delay, AVG(depdelay) AS avg_departure_delay FROM tweakit_perf_db.flights.flightperformance AS fp GROUP BY uniquecarrier ), rankedcarriers AS ( SELECT uniquecarrier, ROW_NUMBER() OVER (ORDER BY ( avg_arrival_delay + avg_departure_delay )) AS performance_rank FROM carrierperformance AS cp ) SELECT description AS carrier_name, performance_rank FROM rankedcarriers AS rc INNER JOIN tweakit_perf_db.flights.carriers AS c ON uniquecarrier = code ORDER BY performance_rank
+  comparison_rules:
+    - columns:
+        - carrier_name
+        - performance_rank
+      match: exact
+  auto_select_schema: 'false'
+  schemas:
+    - flights
+flights_20:
+  query_name: flights_20
+  question: Which airports have the highest frequency of delayed flights? Show me the top airport alone. Display as airport_code, delayed_count.
+  golden_query: WITH delayedflights AS ( SELECT origin AS airport_code, COUNT(*) AS delayed_count FROM tweakit_perf_db.flights.flightperformance AS fp WHERE arrdelay > 0 OR depdelay > 0 GROUP BY origin ), rankedairports AS ( SELECT airport_code, delayed_count, RANK() OVER (ORDER BY delayed_count DESC) AS rank FROM delayedflights AS df ) SELECT airport_code, delayed_count FROM rankedairports AS ra WHERE rank = 1
+  comparison_rules:
+    - columns:
+        - airport_code
+        - delayed_count
       match: exact
   auto_select_schema: 'false'
   schemas:

@@ -14,17 +14,31 @@
     "always_include": true
   },
   {
-    "id": "81d3bbf5-00f0-4357-9eda-880abcc6e27b",
-    "statement": "Do not use TO_JSON in final result projection unless asked explicitly",
+    "id": "81d3bbf5-00f0-4357-9eda-880abcc6e28b",
+    "statement": "Utilize window functions such as ROW_NUMBER() to partition data by the relevant category and order within those partitions to accurately retrieve the leading item in each group.",
     "labels": null,
     "scope": "flights",
     "always_include": true
   },
   {
-    "id": "81d3bbf5-00f0-4357-9eda-880abcc6e28b",
-    "statement": "Utilize window functions such as ROW_NUMBER() or RANK() to partition data by the relevant category and order within those partitions to accurately retrieve the leading item in each group.",
+    "id": "92d3bbf5-00f0-4357-9eda-880abcc6e28b",
+    "statement": "crsdeptime, crsarrtime are of the format HHMM. E.g 620 means 6 hour 20 minutes. 1530 means 15 hour 30 minutes. Use \"LPAD(CAST(crsdeptime / 100 AS INT), 2, '0')\", \"LPAD(CAST(crsarrtime / 100 AS INT), 2, '0')\" to compute hour",
     "labels": null,
-    "scope": "flights",
+    "scope": "flights.flightperformance",
+    "always_include": true
+  },
+  {
+    "id": "93d3bbf5-00f0-4357-9eda-880abcc6e28b",
+    "statement": "carrier always refers to uniquecarrier column in flightperformance table",
+    "labels": null,
+    "scope": "flights.flightperformance",
+    "always_include": true
+  },
+  {
+    "id": "93d3bbf6-00f0-4357-9eda-880abcc6e28b",
+    "statement": "Strictly do not use OBJECT_CONSTRUCT, TO_JSON, OBJECT_AGG.",
+    "labels": null,
+    "scope": "flights.flightperformance",
     "always_include": true
   }
 ]
