@@ -29,7 +29,7 @@
     </style>
     <script>
         $(document).ready(function () {
-            var table = $('#taskResultsTable').DataTable();
+            var table = $('#taskResultsTable').DataTable({"pageLength": 100});
 
             // Setup column-specific search inputs
             $('#taskResultsTable thead').append('<tr>');
