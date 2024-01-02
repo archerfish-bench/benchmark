@@ -165,6 +165,26 @@ class TestCompareResults(unittest.TestCase):
         rules = [{'match': 'exact', 'columns': ['a', 'b']}]
         self.assertEqual(compare_results(expected, actual, rules), (True, ""))
 
+    def test_compare_with_duplicates(self):
+        """
+            Single column with duplicates
+            Should pass (consider it as distinct)
+        """
+        expected = [{'a': 1}]
+        actual = [{'a': 1}, {'a': 1}]
+        rules = [{'match': 'exact', 'columns': ['a']}]
+        self.assertEqual(compare_results(expected, actual, rules), (True, ""))
+
+        rules = [{'match': 'exact', 'columns': ['*']}]
+        self.assertEqual(compare_results(expected, actual, rules), (True, ""))
+
+        actual = [{'a': 1}, {'a': 1}, {'a': 2}]
+        rules = [{'match': 'exact', 'columns': ['a']}]
+        self.assertNotEquals(compare_results(expected, actual, rules), (True, ""))
+
+        rules = [{'match': 'exact', 'columns': ['*']}]
+        self.assertNotEquals(compare_results(expected, actual, rules), (True, ""))
+
     def test_with_real_data(self):
         actual = [{'employee_id': 2, 'start_from': '2003', 'shop_id': 1, 'is_full_time': 'T'},
                   {'employee_id': 7, 'start_from': '2008', 'shop_id': 6, 'is_full_time': 'T'},

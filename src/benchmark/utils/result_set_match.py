@@ -159,8 +159,11 @@ def compare_results(expected, actual, comparison_rules, intent_based_match: bool
 
         # Proceed with de-dup only when expected and actual cols are same
         if expected_cols == actual_cols:
-            expected = remove_duplicates(expected, (cols if cols != ['*'] else expected_cols))
-            actual = remove_duplicates(actual, (cols if cols != ['*'] else actual_cols))
+            if cols != ['*'] or (len(expected_cols) == 1 and len(actual_cols) == 1):
+                expected_cols_to_use = cols if cols != ['*'] else expected_cols
+                actual_cols_to_use = cols if cols != ['*'] else actual_cols
+                expected = remove_duplicates(expected, expected_cols_to_use)
+                actual = remove_duplicates(actual, actual_cols_to_use)
         else:
             logging.info("Expected and actual columns are different, skipping de-duplication in results")
 
