@@ -336,7 +336,7 @@ spider_22:
   - concert_singer
 spider_23:
   query_name: spider_23
-  question: Show the stadium name and the number of concerts in each stadium. Display
+  question: Show the stadium name and the number of concerts in each stadium. Include the stadiums where no concerts happened as well. Display
     as stadium_name, num_concerts.
   golden_query: SELECT name AS stadium_name, COUNT(concert_id) AS num_concerts FROM spider_dev.concert_singer.stadium AS s LEFT JOIN spider_dev.concert_singer.concert AS c ON s.stadium_id = c.stadium_id GROUP BY name
   tables:
@@ -986,7 +986,7 @@ spider_61:
   - pets_1
 spider_62:
   query_name: spider_62
-  question: Find the major and age of students who do not have a cat pet.
+  question: Find the major and age of students who do not have a cat pet. Include the stadiums where no concerts happened as well.
   golden_query: SELECT major ,  age FROM spider_dev.pets_1.student WHERE stuid NOT
     IN (SELECT T1.stuid FROM spider_dev.pets_1.student AS T1 JOIN spider_dev.pets_1.has_pet
     AS T2 ON T1.stuid  =  T2.stuid JOIN spider_dev.pets_1.pets AS T3 ON T3.petid  =  T2.petid
@@ -1026,7 +1026,7 @@ spider_63:
   - pets_1
 spider_64:
   query_name: spider_64
-  question: Find the id of students who do not have a cat pet.
+  question: Find the id of students who do not have a cat pet. Include the students who may not own pet at all.
   golden_query: SELECT stuid FROM spider_dev.pets_1.student EXCEPT SELECT T1.stuid
     FROM spider_dev.pets_1.student AS T1 JOIN spider_dev.pets_1.has_pet AS T2 ON T1.stuid  =  T2.stuid
     JOIN spider_dev.pets_1.pets AS T3 ON T3.petid  =  T2.petid WHERE T3.pettype  =  'cat'
@@ -5252,8 +5252,7 @@ spider_331:
 spider_332:
   query_name: spider_332
   question: Which template type code has most number of templates?
-  golden_query: SELECT template_type_code FROM spider_dev.CRE_DOC_TEMPLATE_MGT.Templates
-    GROUP BY template_type_code ORDER BY count(*) DESC LIMIT 1
+  golden_query: SELECT template_type_code, COUNT(template_id) AS template_count FROM spider_dev.cre_doc_template_mgt.templates GROUP BY template_type_code ORDER BY template_count DESC, template_type_code ASC LIMIT 1
   tables:
   - Templates
   comparison_rules:
@@ -7359,12 +7358,13 @@ spider_467:
   query_name: spider_467
   question: What is the winner name of the winner with the most rank points who participated
     in the Australian Open tournament? Display first_name, last_name, winner_name
-  golden_query: SELECT winner_name FROM spider_dev.wta_1.matches WHERE tourney_name  =  'Australian
-    Open' ORDER BY winner_rank_points DESC LIMIT 1
+  golden_query: WITH australian_open_winners AS ( SELECT winner_id, winner_rank_points FROM spider_dev.wta_1.matches WHERE tourney_name ILIKE '%Australian Open%' ), max_rank_points_winner AS ( SELECT winner_id FROM australian_open_winners WHERE winner_rank_points = ( SELECT MAX(winner_rank_points) FROM australian_open_winners ) ) SELECT first_name, last_name, winner_name FROM spider_dev.wta_1.players AS p INNER JOIN spider_dev.wta_1.matches AS m ON player_id = m.winner_id INNER JOIN max_rank_points_winner AS mr ON m.winner_id = mr.winner_id
   tables:
   - matches
   comparison_rules:
   - columns:
+    - first_name
+    - last_name
     - winner_name
     match: exact
   auto_select_schema: 'false'
