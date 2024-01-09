@@ -1,4 +1,5 @@
 import unittest
+from decimal import Decimal
 
 from ..utils.result_set_match import compare_results
 
@@ -232,6 +233,33 @@ class TestCompareResults(unittest.TestCase):
     def test_compare_float_tolerance(self):
         expected = [{'a': 1.000}]
         actual = [{'a': 1.0001}]
+        rules = [{'match': 'exact', 'columns': ['a']}]
+        self.assertEqual(compare_results(expected, actual, rules), (True, ""))
+
+        expected = [{'a': 1.000}]
+        actual = [{'a': 1.1001}]
+        rules = [{'match': 'exact', 'columns': ['a']}]
+        self.assertNotEqual(compare_results(expected, actual, rules), (True, ""))
+
+        expected = [{'a': Decimal(1.000)}]
+        actual = [{'a': Decimal(1.1001)}]
+        rules = [{'match': 'exact', 'columns': ['a']}]
+        self.assertNotEqual(compare_results(expected, actual, rules), (True, ""))
+
+        expected = [{'a': Decimal(1.000)}]
+        actual = [{'a': Decimal(1.1001)}]
+        rules = [{'match': 'exact', 'columns': ['a']}]
+        self.assertNotEqual(compare_results(expected, actual, rules), (True, ""))
+
+        # Restricts to 1 decimal place, so it will be true. Intensional
+        expected = [{'a': 0.00051}]
+        actual = [{'a': 0.00053}]
+        rules = [{'match': 'exact', 'columns': ['a']}]
+        self.assertEqual(compare_results(expected, actual, rules), (True, ""))
+
+        # Restricts to 1 decimal place, so it will be true. Intensional
+        expected = [{'a': Decimal(0.00051)}]
+        actual = [{'a': Decimal(0.00053)}]
         rules = [{'match': 'exact', 'columns': ['a']}]
         self.assertEqual(compare_results(expected, actual, rules), (True, ""))
 
