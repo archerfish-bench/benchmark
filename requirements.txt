@@ -14,3 +14,5 @@ llama_index==0.8.59
 openai
 overrides
 psycopg2
+langchain
+langchain-experimental

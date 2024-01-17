@@ -201,5 +201,35 @@
     "statement": "airportname should be with exact comparison. Do not use LIKE , ILIKE",
     "scope": "SPIDER_DEV.FLIGHT_2.airports",
     "labels": []
+  },
+  {
+    "id": "131ea98a-3acb-4e0a-b1f0-3eec45721fb9",
+    "statement": "Liked details will be available in liked_id",
+    "scope": "SPIDER_DEV.network_1",
+    "labels": []
+  },
+  {
+    "id": "159eac59-b073-49b2-bf20-46393eea50b0",
+    "statement": "Use \"age\" column to infer age of dog. Do not use date_of_birth column.",
+    "scope": "SPIDER_DEV.DOG_KENNELS.DOGS",
+    "labels": []
+  },
+  {
+    "id": "ae7e4d43-05b6-4df5-9b65-52857973cf7b",
+    "statement": "A high schooler being 'friends with others' is defined as their ID (student_id) appearing in friend table.",
+    "scope": "SPIDER_DEV.NETWORK_1.HIGHSCHOOLER",
+    "labels": []
+  },
+  {
+    "id": "5102e4a3-beef-476d-8eac-d639abe489ba",
+    "statement": "Do not use any casting functions for original_air_date",
+    "scope": "SPIDER_DEV.TVSHOW.CARTOON",
+    "labels": []
+  },
+  {
+    "id": "0db8a4af-add5-4881-8ec8-295b292faabe",
+    "statement": "height in represented in centimeters.",
+    "scope": "POKER_PLAYER.PEOPLE.HEIGHT",
+    "labels": []
   }
 ]
