@@ -228,8 +228,8 @@
   },
   {
     "id": "0db8a4af-add5-4881-8ec8-295b292faabe",
-    "statement": "height in represented in centimeters.",
-    "scope": "POKER_PLAYER.PEOPLE.HEIGHT",
+    "statement": "height is represented in centimeters.",
+    "scope": "SPIDER_DEV.POKER_PLAYER.PEOPLE.HEIGHT",
     "labels": []
   }
 ]

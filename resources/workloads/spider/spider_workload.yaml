@@ -2146,7 +2146,7 @@ spider_132:
     Display as max_horsepower.
   golden_query: SELECT T2.horsepower as max_horsepower, T1.Make FROM spider_dev.car_1.CAR_NAMES
     AS T1 JOIN spider_dev.car_1.CARS_DATA AS T2 ON T1.MakeId = T2.Id WHERE T2.cylinders
-    = 3 ORDER BY TRY_TO_NUMBER(T2.horsepower) DESC nulls last;
+    = 3 ORDER BY TRY_TO_NUMBER(T2.horsepower) DESC nulls last limit 1;
   tables:
   - CARS_DATA
   - CAR_NAMES
@@ -2164,7 +2164,7 @@ spider_133:
     and what make is it? Display as horsepower, make.
   golden_query: SELECT T2.horsepower, T1.Make FROM spider_dev.car_1.CAR_NAMES AS T1
     JOIN spider_dev.car_1.CARS_DATA AS T2 ON T1.MakeId = T2.Id WHERE T2.cylinders
-    = 3 ORDER BY TRY_TO_NUMBER(T2.horsepower) DESC nulls last;
+    = 3 ORDER BY TRY_TO_NUMBER(T2.horsepower) DESC nulls last limit 1;
   tables:
   - CARS_DATA
   - CAR_NAMES
@@ -2621,9 +2621,7 @@ spider_161:
 spider_162:
   query_name: spider_162
   question: How many countries has more than 2 car makers ? Display as num_country.
-  golden_query: select count(*) as num_country from spider_dev.car_1.countries as
-    t1 join spider_dev.car_1.car_makers as t2 on t1.countryid  =  t2.country group
-    by t1.countryid having count(*)  >  2
+  golden_query: SELECT COUNT(*) AS num_country FROM ( SELECT country, COUNT(id) AS maker_count FROM spider_dev.car_1.car_makers GROUP BY country HAVING COUNT(id) > 2 ) AS country_maker_count
   tables:
   - countries
   - car_makers
@@ -2638,9 +2636,7 @@ spider_163:
   query_name: spider_163
   question: What is the number of countries with more than 2 car makers ? Display
     as num_country.
-  golden_query: select count(*) as num_country from spider_dev.car_1.countries as
-    t1 join spider_dev.car_1.car_makers as t2 on t1.countryid  =  t2.country group
-    by t1.countryid having count(*)  >  2
+  golden_query: SELECT COUNT(*) AS num_country FROM ( SELECT country FROM spider_dev.car_1.car_makers AS cm GROUP BY country HAVING COUNT(id) > 2 ) AS country_count
   tables:
   - countries
   - car_makers
@@ -2897,7 +2893,7 @@ spider_177:
 spider_178:
   query_name: spider_178
   question: What are the id and names of the countries which have more than 3 car
-    makers or produce the 'fiat' model?
+    makers or produce the model 'fiat'?
   golden_query: SELECT T1.countryId ,  T1.CountryName FROM spider_dev.car_1.Countries
     AS T1 JOIN spider_dev.car_1.CAR_MAKERS AS T2 ON T1.CountryId  =  T2.Country GROUP
     BY T1.countryId ,  T1.CountryName HAVING count(*)  >  3 UNION SELECT T1.countryId
@@ -2919,7 +2915,7 @@ spider_178:
 spider_179:
   query_name: spider_179
   question: What are the ids and names of all countries that either have more than
-    3 car makers or produce fiat model ?
+    3 car makers or produce model 'fiat' ?
   golden_query: select t1.countryid ,  t1.countryname from spider_dev.car_1.countries
     as t1 join spider_dev.car_1.car_makers as t2 on t1.countryid  =  t2.country group
     by t1.countryid ,  t1.countryname having count(*)  >  3 union select t1.countryid
@@ -7315,7 +7311,7 @@ spider_464:
   - columns:
     - winner_name
     - winner_rank_points
-    match: exact
+    match: oneof
   auto_select_schema: 'false'
   schemas:
   - wta_1
@@ -7728,14 +7724,14 @@ spider_489:
   - wta_1
 spider_490:
   query_name: spider_490
-  question: Find the number of players for each hand type. Display as num_pla.
-  golden_query: SELECT count(*) as num_pla,  hand FROM spider_dev.wta_1.players GROUP
+  question: Find the number of players for each hand type. Display count as num_players.
+  golden_query: SELECT count(*) as num_players,  hand FROM spider_dev.wta_1.players GROUP
     BY hand
   tables:
   - players
   comparison_rules:
   - columns:
-    - num_pla
+    - num_players
     - hand
     match: exact
   auto_select_schema: 'false'
@@ -8595,7 +8591,7 @@ spider_543:
   question: What is the first, middle, and last name, along with the id and number
     of enrollments, for the student who enrolled the most in any program? show 1 row.
   golden_query: SELECT T1.student_id ,  T1.first_name ,  T1.middle_name ,  T1.last_name
-    ,  count(*) ,  T1.student_id FROM spider_dev.student_transcripts_tracking.Students
+    ,  count(*) FROM spider_dev.student_transcripts_tracking.Students
     AS T1 JOIN spider_dev.student_transcripts_tracking.Student_Enrolment AS T2 ON
     T1.student_id  =  T2.student_id GROUP BY T1.student_id ,  T1.first_name ,  T1.middle_name
     ,  T1.last_name ORDER BY count(*) DESC LIMIT 1
@@ -10977,7 +10973,7 @@ spider_697:
   query_name: spider_697
   question: What are the number of votes from state 'NY' or 'CA'? Display as num_votes.
   golden_query: SELECT count(*) as num_votes FROM spider_dev.voter_1.votes WHERE state  =  'NY'
-    OR state  =  'CA'
+    OR state  =  'CA' grup by state
   tables:
   - votes
   comparison_rules:
@@ -11063,9 +11059,9 @@ spider_701:
 spider_702:
   query_name: spider_702
   question: Return the names of the contestants whose names contain the substring
-    'Al'. Use case sensitive matching
+    'Al'.
   golden_query: select contestant_name from spider_dev.voter_1.contestants where contestant_name
-    like '%Al%'
+    ilike '%Al%'
   tables:
   - contestants
   comparison_rules:
@@ -11149,7 +11145,7 @@ spider_707:
   - world_1
 spider_708:
   query_name: spider_708
-  question: How much surface area do the countires in the Carribean cover together?
+  question: How much surface area do the countires in the Carribean region cover together?
     Display as tot_surface
   golden_query: SELECT sum(SurfaceArea) as tot_surface FROM spider_dev.world_1.country
     WHERE Region  =  'Caribbean'
@@ -13147,6 +13143,8 @@ spider_833:
   question: What are the maximum and minimum share of performances whose type is not
     'Live final'. Display as min_share, max_share.
   golden_query: SELECT min(SHARE) as min_share ,  max(SHARE) as max_share FROM spider_dev.orchestra.performance WHERE TYPE != 'Live final'
+  tweaks:
+    - "tweak to existing question: If try_to_number is used, do not use it. Do not replace % as well"
   tables:
     - performance
   comparison_rules:
@@ -13162,6 +13160,8 @@ spider_834:
   question: Return the maximum and minimum shares for performances that do not have
     the type 'Live final'. Display as min_share, max_share.
   golden_query: SELECT min(SHARE) as min_share ,  max(SHARE) as max_share FROM spider_dev.orchestra.performance WHERE TYPE != 'Live final'
+  tweaks:
+    - "tweak to existing question: If try_to_number is used, do not use it. Do not replace % as well"
   tables:
     - performance
   comparison_rules:
@@ -14445,10 +14445,8 @@ spider_916:
   - network_1
 spider_917:
   query_name: spider_917
-  question: Find the minimum grade of students who have no friends. Display as min_grade.
-  golden_query: SELECT min(grade) as min_grade FROM spider_dev.network_1.Highschooler
-    WHERE id NOT IN (SELECT T1.student_id FROM spider_dev.network_1.Friend AS T1 JOIN
-    spider_dev.network_1.Highschooler AS T2 ON T1.student_id  =  T2.id)
+  question: Find the minimum grade of students who have no friends and they are not friends of others. Display as min_grade.
+  golden_query: SELECT MIN(GRADE) AS MIN_GRADE FROM SPIDER_DEV.NETWORK_1.HIGHSCHOOLER WHERE ID NOT IN (SELECT T1.STUDENT_ID FROM SPIDER_DEV.NETWORK_1.FRIEND AS T1) AND ID NOT IN (SELECT T1.FRIEND_ID FROM SPIDER_DEV.NETWORK_1.FRIEND AS T1)
   tables:
   - Highschooler
   - Friend
@@ -14461,11 +14459,9 @@ spider_917:
   - network_1
 spider_918:
   query_name: spider_918
-  question: What is the lowest grade of students who do not have any friends? Display
+  question: What is the lowest grade of students who do not have any friends and they are not friends of others? Display
     as min_grade.
-  golden_query: SELECT min(grade) as min_grade FROM spider_dev.network_1.Highschooler
-    WHERE id NOT IN (SELECT T1.student_id FROM spider_dev.network_1.Friend AS T1 JOIN
-    spider_dev.network_1.Highschooler AS T2 ON T1.student_id  =  T2.id)
+  golden_query: SELECT MIN(GRADE) AS MIN_GRADE FROM SPIDER_DEV.NETWORK_1.HIGHSCHOOLER WHERE ID NOT IN (SELECT T1.STUDENT_ID FROM SPIDER_DEV.NETWORK_1.FRIEND AS T1) AND ID NOT IN (SELECT T1.FRIEND_ID FROM SPIDER_DEV.NETWORK_1.FRIEND AS T1)
   tables:
   - Highschooler
   - Friend
@@ -14878,7 +14874,7 @@ spider_940:
   - dog_kennels
 spider_941:
   query_name: spider_941
-  question: Which owner has paid the largest amount of money in total for their dogs?
+  question: Which owner has paid the largest amount of money in total for their dogs for treatments?
     Show the owner id and zip code.
   golden_query: SELECT T1.owner_id ,  T1.zip_code FROM spider_dev.dog_kennels.Owners
     AS T1 JOIN spider_dev.dog_kennels.Dogs AS T2 ON T1.owner_id  =  T2.owner_id JOIN
@@ -14898,8 +14894,7 @@ spider_941:
   - dog_kennels
 spider_942:
   query_name: spider_942
-  question: Find the owner id and zip code of the owner who spent the most money in
-    total for his or her dogs. Sort by money spent in descending order. Show 1 row.
+  question: Find the owner id and zip code of the owner who spent the most money in total for his or her dogs for treatment. Sort by money spent in descending order. Show 1 row.
   golden_query: SELECT T1.owner_id ,  T1.zip_code FROM spider_dev.dog_kennels.Owners
     AS T1 JOIN spider_dev.dog_kennels.Dogs AS T2 ON T1.owner_id  =  T2.owner_id JOIN
     spider_dev.dog_kennels.Treatments AS T3 ON T2.dog_id  =  T3.dog_id GROUP BY T1.owner_id
@@ -15130,10 +15125,7 @@ spider_955:
   query_name: spider_955
   question: List the names of the dogs of the rarest breed and the treatment dates
     of them.
-  golden_query: SELECT T1.name ,  T2.date_of_treatment FROM spider_dev.dog_kennels.Dogs
-    AS T1 JOIN spider_dev.dog_kennels.Treatments AS T2 ON T1.dog_id  =  T2.dog_id
-    WHERE T1.breed_code  =  ( SELECT breed_code FROM spider_dev.dog_kennels.Dogs GROUP
-    BY breed_code ORDER BY count(*) ASC LIMIT 1 )
+  golden_query: select T1.name, T2.date_of_treatment from spider_dev.dog_kennels.Dogs AS T1 JOIN spider_dev.dog_kennels.Treatments AS T2 ON T1.dog_id = T2.dog_id WHERE T1.breed_code IN (select breed_code from (select breed_code, dense_rank() over (order by count(*) asc) as rnk from spider_dev.dog_kennels.Dogs group by breed_code) where rnk=1)
   tables:
   - Dogs
   - Treatments
@@ -15148,10 +15140,7 @@ spider_955:
 spider_956:
   query_name: spider_956
   question: Which dogs are of the rarest breed? Show their names and treatment dates.
-  golden_query: SELECT T1.name ,  T2.date_of_treatment FROM spider_dev.dog_kennels.Dogs
-    AS T1 JOIN spider_dev.dog_kennels.Treatments AS T2 ON T1.dog_id  =  T2.dog_id
-    WHERE T1.breed_code  =  ( SELECT breed_code FROM spider_dev.dog_kennels.Dogs GROUP
-    BY breed_code ORDER BY count(*) ASC LIMIT 1 )
+  golden_query: select T1.name, T2.date_of_treatment from spider_dev.dog_kennels.Dogs AS T1 JOIN spider_dev.dog_kennels.Treatments AS T2 ON T1.dog_id = T2.dog_id WHERE T1.breed_code IN (select breed_code from (select breed_code, dense_rank() over (order by count(*) asc) as rnk from spider_dev.dog_kennels.Dogs group by breed_code) where rnk=1)
   tables:
   - Dogs
   - Treatments
@@ -15611,7 +15600,6 @@ spider_985:
   - columns:
     - name
     - age
-    - weight
     match: exact
   auto_select_schema: 'false'
   schemas:
@@ -15628,7 +15616,6 @@ spider_986:
   - columns:
     - name
     - age
-    - weight
     match: exact
   auto_select_schema: 'false'
   schemas:
@@ -15715,7 +15702,7 @@ spider_992:
   - dog_kennels
 spider_993:
   query_name: spider_993
-  question: How much does the most expensive charge type costs? Display as exp_charge.
+  question: How much does the most expensive charge type costs? Display the expensive charge amount as exp_charge.
   golden_query: SELECT max(charge_amount) as exp_charge FROM spider_dev.dog_kennels.Charges
   tables:
   - Charges
@@ -15936,7 +15923,7 @@ spider_1007:
   - singer
 spider_1008:
   query_name: spider_1008
-  question: What are the names of the singers who are not French citizens?
+  question: What are the names of the singers who are not 'France' citizens?
   golden_query: SELECT Name FROM spider_dev.singer.singer WHERE Citizenship != 'France'
   tables:
   - singer
