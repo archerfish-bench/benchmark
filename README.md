@@ -2,7 +2,7 @@
 
 <img align="left" src="https://github.com/archerfish-bench/benchmark/blob/main/logo.jpg" width="200">
 
-Welcome to Archerfish, a benchmarking framework designed for evaluating the capabilities of NL2SQL systems. The speciality of Archerfish is that it focusses on the user's intent rather than simply on correctness. Continued work is intended to enable direct measurement and comparison of important open issues, such as resolution of ambiguity, or handling of biasn and harmful content.
+Welcome to Archerfish, a benchmarking framework designed for evaluating the capabilities of NL2SQL systems. The specialty of Archerfish is that it focuses on the user's intent rather than simply on correctness. Continued work is intended to enable direct measurement and comparison of important open issues, such as resolution of ambiguity, or handling of bias and harmful content.
 
 The idea was introduced in the CIDR paper [TBD Link](http://404.html).
 
@@ -15,16 +15,16 @@ The benchmark originated in a collaboration between [Microsoft](www.microsoft.co
 - Driver program reads the benchmark config and workload config and runs the benchmark.
 - Benchmark config contains details about the benchmark, such as benchmark name, database connection details, etc.
 - Workload config contains details about the workload, such as queries to run, etc.
-- Base benchmark is responsible for running all the text-to-sql queries in multithreaded fashion.
+- Base benchmark is responsible for running all the text-to-sql queries in a multithreaded fashion.
 - Each benchmark should extend the BaseBenchmark class and override the methods as needed. 
-- Responsibility of the child benchmarks is to ensure that they provide a valid SQL after invoking relevant LLM. Base benchmark
-takes care of running the query in golden database and compare the results.
+- Responsibility of the child benchmarks is to ensure that they provide a valid SQL after invoking relevant LLM.
+- Base benchmark takes care of running the query in golden database and comparing the results.
 
 # Benchmark Result Comparison
-In the interest of stability, result comparisons follow certain rule
-- Results of golden query and LLM query result can be in any order. Result comparison will take care of this.
-- Results are compared in case-insensitive manner.
-- Compare all columns or few of the columns. This is configurable in workload config YAML file.
+In the interest of stability, result comparisons follow certain rules
+- Results of golden query and LLM query results can be in any order. Result comparison will take care of this.
+- Results are compared in a case-insensitive manner.
+- Compare all columns or a few of the columns. This is configurable in the workload config YAML file.
 - Duplicates are ignored, focusing on validating the query's uniqueness and usefulness.
 - Round off float to round(float,0) for comparison.
 
@@ -45,17 +45,17 @@ This file should include specific configuration details for each benchmark, such
 * any endpoints for the benchmark
 * source and target database connection information, etc. 
 
-E.g. WaiiBenchmark contains details about its endpoint for generating text-to-sql, database connection details and so on.
+E.g. WaiiBenchmark contains details about its endpoint for generating text-to-sql, database connection details, and so on.
 This will be used by WaiiBenchmark for running the queries.
 
 For other LLM integrations, extend the BenchmarkBase class from base_benchmark.py and override methods the following methods as needed.
 * setup
 * generate_query
 * cleanup
-BaseBenchmark contains most of the code to run the benchmark, in multithreaded fashion.
+BaseBenchmark contains most of the code to run the benchmark, in a multithreaded fashion.
 
 Details about source and target databases are mentioned in the benchmark config file. 
-In certain benchmarks, source and target databases can be the same. In such cases, you can use "same_as_source=true" in target database in config.
+In certain benchmarks, source and target databases can be the same. In such cases, you can use "same_as_source=true" in the target database in config.
 Generated SQL will be run in the target database and results will be compared with the golden query results (run on source database).
 
 # Workload Config
@@ -88,11 +88,12 @@ Usage: ./run_benchmark.sh [options]
 This should generate a report at the end of the run. You can also check the logs in the logs directory.
 
 # Benchmark Report & Metrics
-The benchmark generates a report at the end of the run. Though success ratio of the queries is important, there are other details that will be valuable to evaluate the benchmark.
+The benchmark generates a report at the end of the run. Though success ratio of the queries is important, other details will be valuable to evaluate the benchmark.
 
 The report contains the following details:
-* Details on whether system was able to generate the query for the question.
-* Details on results comparison. Details on rules are covered earlier in this document.
+* Details on whether the system was able to generate the query for the question.
+* Details on results comparison.
+* Details on rules are covered earlier in this document.
 * Details on the queries that were run including generated query and golden query.
 * Time taken to generate the query.
 * Time taken to run the generated query and golden query.
