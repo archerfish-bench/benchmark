@@ -4,7 +4,7 @@
 
 Welcome to Archerfish, a benchmarking framework designed for evaluating the capabilities of NL2SQL systems. The specialty of Archerfish is that it focuses on the user's intent rather than simply on correctness. Continued work is intended to enable direct measurement and comparison of important open issues, such as resolution of ambiguity, or handling of bias and harmful content.
 
-The idea was introduced in the CIDR paper [TBD Link](http://404.html).
+The idea was introduced in the [CIDR paper](https://www.cidrdb.org/cidr2024/papers/p74-floratou.pdf).
 
 The benchmark originated in a collaboration between [Microsoft](www.microsoft.com) and [Waii](www.waii.ai). Contributions and additions are welcome. Please reach out to (...) for more information.
 
