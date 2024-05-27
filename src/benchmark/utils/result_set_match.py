@@ -127,25 +127,6 @@ def compare_results(expected, actual, comparison_rules, intent_based_match: bool
         for rule in comparison_rules:
             rule["columns"] = [column.lower() for column in rule["columns"]]
 
-    def remove_duplicates(input_list, columns: list = None):
-        """
-        Remove duplicates from list(dict)
-        Weird that dict in python is not hashable, so we need to convert it to tuple
-        """
-        seen = {}
-        result = []
-        for item in input_list:
-            # Convert dict to a tuple of items
-            # If columns are specified, use only those for creating tuple_representation
-            if columns:
-                tuple_representation = tuple((k, item[k]) for k in columns if k in item)
-            else:
-                # If no columns specified, use all columns
-                tuple_representation = tuple(item.items())
-            if tuple_representation not in seen:
-                seen[tuple_representation] = True
-                result.append(item)
-        return result
 
     # Get unique elements. We don't bother about duplicates in final result
     # First get all columns from comparison_rules
@@ -237,6 +218,56 @@ def compare_results(expected, actual, comparison_rules, intent_based_match: bool
         if not matched:
             return False, f"Comparison failed for row: exp={expected_row}, act={actual_row}"
     return True, ""
+
+
+def convert_dict_to_tuple(d):
+    """
+    Recursively convert a dictionary to a tuple.
+    """
+    return tuple((k, convert_value_to_tuple(v)) for k, v in sorted(d.items()))
+
+
+def convert_value_to_tuple(value):
+    """
+    Convert values to tuples if they are dictionaries or lists.
+    """
+    if isinstance(value, dict):
+        return convert_dict_to_tuple(value)
+    elif isinstance(value, list):
+        return tuple(convert_value_to_tuple(v) for v in value)
+    return value
+
+
+def remove_duplicates(input_list, columns: list = None):
+    """
+    Remove duplicates from list(dict).
+    Convert nested dicts to tuples to make them hashable.
+    """
+    seen = set()
+    result = []
+
+    for item in input_list:
+        try:
+            # Convert dict to a tuple of items
+            # If columns are specified, use only those for creating tuple_representation
+            if columns:
+                tuple_representation = tuple((k, convert_value_to_tuple(item[k])) for k in columns if k in item)
+            else:
+                # If no columns specified, use all columns
+                tuple_representation = convert_dict_to_tuple(item)
+
+            # Debug statement to trace tuple_representation
+            logging.debug(f"Tuple representation: {tuple_representation}")
+
+            if tuple_representation not in seen:
+                seen.add(tuple_representation)
+                result.append(item)
+        except TypeError as e:
+            logging.error(f"Error removing duplicates: {e}")
+            logging.error(f"Item causing error: {item}")
+            raise e
+
+    return result
 
 
 def compare_exact_match(expected, actual):

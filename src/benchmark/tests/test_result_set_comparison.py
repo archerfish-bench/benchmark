@@ -2,6 +2,7 @@ import unittest
 from decimal import Decimal
 
 from ..utils.result_set_match import compare_results
+from ..utils.result_set_match import remove_duplicates
 
 
 class TestCompareResults(unittest.TestCase):
@@ -25,6 +26,71 @@ class TestCompareResults(unittest.TestCase):
         actual = [{'a': 1}, {'a': 1}]
         rules = []
         self.assertEqual((True, ''), compare_results(expected, actual, rules))
+
+    def test_remove_duplicates(self):
+        # Input list of dictionaries
+        input_list = [
+            {"_id": 1, "name": "Company A", "domains": "example.com"},
+            {"_id": 1, "name": "Company A", "domains": "example.com"},
+            {"_id": 2, "name": "Company B", "domains": "example.org"},
+            {"_id": 3, "name": "Company C", "domains": "example.net"},
+            {"_id": 3, "name": "Company C", "domains": "example.net"},
+            {"_id": 4, "name": "Company D"}
+        ]
+
+        # Expected output without specifying columns (consider all columns)
+        expected_output_all_columns = [
+            {"_id": 1, "name": "Company A", "domains": "example.com"},
+            {"_id": 2, "name": "Company B", "domains": "example.org"},
+            {"_id": 3, "name": "Company C", "domains": "example.net"},
+            {"_id": 4, "name": "Company D"}
+        ]
+
+        # Expected output specifying columns ["_id", "name"]
+        expected_output_specific_columns = [
+            {"_id": 1, "name": "Company A", "domains": "example.com"},
+            {"_id": 2, "name": "Company B", "domains": "example.org"},
+            {"_id": 3, "name": "Company C", "domains": "example.net"},
+            {"_id": 4, "name": "Company D"}
+        ]
+
+        # Test without specifying columns
+        result_all_columns = remove_duplicates(input_list)
+        assert result_all_columns == expected_output_all_columns, f"Expected {expected_output_all_columns} but got {result_all_columns}"
+
+        # Test with specifying columns ["_id", "name"]
+        result_specific_columns = remove_duplicates(input_list, columns=["_id", "name"])
+        assert result_specific_columns == expected_output_specific_columns, f"Expected {expected_output_specific_columns} but got {result_specific_columns}"
+
+        # Test with nested structures
+        input_list = [
+            {"_id": 1, "name": "Company A", "domains": "example.com", "info": {"location": "US", "employees": 50}},
+            {"_id": 1, "name": "Company A", "domains": "example.com", "info": {"location": "US", "employees": 50}},
+            {"_id": 2, "name": "Company B", "domains": "example.org", "info": {"location": "UK", "employees": 30}},
+            {"_id": 3, "name": "Company C", "domains": "example.net", "info": {"location": "CA", "employees": 10}},
+            {"_id": 3, "name": "Company C", "domains": "example.net", "info": {"location": "CA", "employees": 10}},
+            {"_id": 4, "name": "Company D", "info": {"location": "AU"}}
+        ]
+
+        expected_output_all_columns = [
+            {"_id": 1, "name": "Company A", "domains": "example.com", "info": {"location": "US", "employees": 50}},
+            {"_id": 2, "name": "Company B", "domains": "example.org", "info": {"location": "UK", "employees": 30}},
+            {"_id": 3, "name": "Company C", "domains": "example.net", "info": {"location": "CA", "employees": 10}},
+            {"_id": 4, "name": "Company D", "info": {"location": "AU"}}
+        ]
+
+        expected_output_specific_columns = [
+            {"_id": 1, "name": "Company A", "domains": "example.com", "info": {"location": "US", "employees": 50}},
+            {"_id": 2, "name": "Company B", "domains": "example.org", "info": {"location": "UK", "employees": 30}},
+            {"_id": 3, "name": "Company C", "domains": "example.net", "info": {"location": "CA", "employees": 10}},
+            {"_id": 4, "name": "Company D", "info": {"location": "AU"}}
+        ]
+
+        result_all_columns = remove_duplicates(input_list)
+        assert result_all_columns == expected_output_all_columns, f"Expected {expected_output_all_columns} but got {result_all_columns}"
+
+        result_specific_columns = remove_duplicates(input_list, columns=["_id", "name"])
+        assert result_specific_columns == expected_output_specific_columns, f"Expected {expected_output_specific_columns} but got {result_specific_columns}"
 
     def test_compare_different_length_with_dups(self):
         expected = [{}]
