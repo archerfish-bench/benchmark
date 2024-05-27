@@ -1,4 +1,4 @@
-waii-sdk-py==1.7.5
+waii-sdk-py==1.13.3
 pyyaml
 tqdm
 uuid

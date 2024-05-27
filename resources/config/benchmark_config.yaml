@@ -9,6 +9,7 @@ implementations:
       api_key: ''
       waii_db_connection_key: 'snowflake://<username>@<account>/<database>?role=<ROLE>&warehouse=<COMPUTE>'
       waii_context: perf_spider_waii_context.json
+      dialect: snowflake
     databases:
       source:
         # Golden query runs in source DB

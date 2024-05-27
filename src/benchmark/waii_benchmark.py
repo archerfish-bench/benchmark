@@ -56,6 +56,10 @@ class WaiiBenchmark(BenchmarkBase):
         # Add semantic contexts
         add_contexts(config=waii_configs)
 
+        # get dialect details. If not provided, default to snowflake
+        self.dialect = waii_configs.get('dialect', 'snowflake')
+        print(f"Using dialect: {self.dialect}")
+
     def get_search_context(self, query_info: dict):
         schemas = query_info['schemas'] or ["*"]
         auto_select_schema = query_info[AUTO_SELECT_SCHEMA]
@@ -92,7 +96,7 @@ class WaiiBenchmark(BenchmarkBase):
                     tweak_request = QueryGenerationRequest(uuid=query_id,
                                                            search_context=search_context,
                                                            ask=tweak,
-                                                           dialect='snowflake',
+                                                           dialect=self.dialect,
                                                            tweak_history=tweaks
                                                            )
                     (gen_query_time, gen_query, tables) = generate_query(question=tweak, request=tweak_request)
@@ -123,7 +127,7 @@ class WaiiBenchmark(BenchmarkBase):
                                                      request=QueryGenerationRequest(uuid=query_id,
                                                                                     search_context=search_context,
                                                                                     ask=question,
-                                                                                    dialect='snowflake'))
+                                                                                    dialect=self.dialect))
         result.generation_time = gen_query_time
         result.generated_query = gen_query
         result.is_query_generated = True
