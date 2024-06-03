@@ -1,13 +1,16 @@
+import io
 import logging
 import os
 import time
 import traceback
 from abc import abstractmethod
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from contextlib import redirect_stdout
 from typing import Optional
 from urllib.parse import quote_plus
 
 import sqlalchemy as sa
+import sqlfluff
 from sqlalchemy import inspect
 from tqdm import tqdm
 
@@ -198,11 +201,24 @@ class BenchmarkBase:
         except Exception as e:
             logging.error(f"Exception while setting schema: {str(e)}")
 
+    def format_sql_query(self, query):
+        try:
+            f = io.StringIO()
+            with redirect_stdout(f):
+                formatted_query = sqlfluff.fix(query, dialect='ansi')
+            return formatted_query
+        except Exception as e:
+            # return original query
+            print(f"Error in formatting query: {query}. Returning original query.")
+            return query
+
     def run_query_and_compare(self, query_info: dict) -> TaskResult:
         """
         Generate query, run it and get results. Compare with golden query results.
         """
         task_result = self.generate_query(query_info=query_info)
+        task_result.generated_query = self.format_sql_query(task_result.generated_query)
+        query_info['golden_query'] = self.format_sql_query(query_info['golden_query'])
         tables = query_info.get(TABLES, None)
         task_result.golden_query_tables = tables
         if str(task_result.generated_query).strip() == str(query_info[GOLDEN_QUERY]).strip():

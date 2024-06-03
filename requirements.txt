@@ -16,3 +16,4 @@ overrides
 psycopg2
 langchain
 langchain-experimental
+sqlfluff==3.0.7

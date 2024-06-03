@@ -60,6 +60,10 @@ class WaiiBenchmark(BenchmarkBase):
         self.dialect = waii_configs.get('dialect', 'snowflake')
         print(f"Using dialect: {self.dialect}")
 
+        self.model = waii_configs.get('model', None)
+        if self.model:
+            print(f"Using model: {self.model}")
+
     def get_search_context(self, query_info: dict):
         schemas = query_info['schemas'] or ["*"]
         auto_select_schema = query_info[AUTO_SELECT_SCHEMA]
@@ -97,7 +101,8 @@ class WaiiBenchmark(BenchmarkBase):
                                                            search_context=search_context,
                                                            ask=tweak,
                                                            dialect=self.dialect,
-                                                           tweak_history=tweaks
+                                                           tweak_history=tweaks,
+                                                           model=self.model
                                                            )
                     (gen_query_time, gen_query, tables) = generate_query(question=tweak, request=tweak_request)
                     logging.info(f"Query {query_name} after tweak: {gen_query}")
@@ -127,7 +132,8 @@ class WaiiBenchmark(BenchmarkBase):
                                                      request=QueryGenerationRequest(uuid=query_id,
                                                                                     search_context=search_context,
                                                                                     ask=question,
-                                                                                    dialect=self.dialect))
+                                                                                    dialect=self.dialect,
+                                                                                    model=self.model))
         result.generation_time = gen_query_time
         result.generated_query = gen_query
         result.is_query_generated = True
