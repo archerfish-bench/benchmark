@@ -217,8 +217,8 @@ class BenchmarkBase:
         Generate query, run it and get results. Compare with golden query results.
         """
         task_result = self.generate_query(query_info=query_info)
-        task_result.generated_query = self.format_sql_query(task_result.generated_query)
-        query_info['golden_query'] = self.format_sql_query(query_info['golden_query'])
+        task_result.generated_query = task_result.generated_query
+        query_info['golden_query'] = query_info['golden_query']
         tables = query_info.get(TABLES, None)
         task_result.golden_query_tables = tables
         if str(task_result.generated_query).strip() == str(query_info[GOLDEN_QUERY]).strip():
