@@ -27,6 +27,26 @@ implementations:
     db_connection: 'sqlite:///<provide_entire_path_here>/world_1.sqlite'
 
 
+  # Vanna Benchmark related details
+  - name: VannaBenchmark
+    class: vanna_benchmark.VannaBenchmark
+    description: Using Vanna API for generating text-to-sql using openai GPT-4.
+    threads_count: 3
+    vanna_configs:
+      open_ai_key: '<open_ai_key>'
+      snowflake_conn_str: 'user=<user_name> password=<password> account=<account> warehouse=<warehouse_name> database=<db_name> schema=<schema_name>'
+      schema: '<schema_name>'
+      context_file: '<fully_qualified_path_of_context_file_if_any_that_can_be_given_to_vanna_as_documentation>'
+    databases:
+      source:
+        # Golden query runs in source DB
+        type: sqlalchemy
+        connection: 'snowflake://user_name:password@account/db_name/schema_name?role=role_name&warehouse=warehouse_name'
+      target:
+        # Generated query runs in target DB
+        # When target DB is same as source, we can use the same connection. Otherwise, provide type and connection string
+        same_as_source: true
+
   # Each benchmark can have its relevant configurations defined here.
   - name: SQLFromPromptBenchmark
     class: sql_from_prompt_benchmark.SQLFromPromptBenchmark

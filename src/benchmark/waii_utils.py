@@ -29,7 +29,12 @@ def add_contexts(config: dict):
                 for ctx in sem_context_array:
                     stmt = ctx['statement']
                     scope = ctx['scope']
-                    statements.append(SemanticStatement(statement=stmt, scope=scope, id=str(uuid.uuid4())))
+                    lookup_summaries = ctx.get('lookup_summaries', [])
+                    summarization_prompt = ctx.get('summarization_prompt', '')
+                    labels = ctx['labels']
+                    always_included = ctx.get('always_include', True)
+                    id = ctx.get('id', None)
+                    statements.append(SemanticStatement(id = id, lookup_summaries = lookup_summaries, summarization_prompt = summarization_prompt, statement=stmt, scope=scope, labels=labels, always_include=always_included))
 
                 # Finally add all contexts
                 response = WAII.SemanticContext.modify_semantic_context(
